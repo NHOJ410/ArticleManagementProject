@@ -1,0 +1,10 @@
+import { createApp } from 'vue'
+import App from './App.vue'
+import router from './router'
+import pinia from './stores/index.js' // 1. 導入 pinia
+import '@/assets/main.scss' // 導入sass 重製樣式
+
+const app = createApp(App)
+app.use(pinia) // 2. 掛載到 app上
+app.use(router)
+app.mount('#app')
