@@ -31,5 +31,10 @@ module.exports = {
     'vue/no-setup-props-destructure': ['off'], // 關閉 props 解構的檢查
     // 💡 添加未定義變量的錯誤提示，create-vue@3.6.3 默認關閉，這裡加上是為了支持下一個章節的演示。
     'no-undef': 'error' // 未定義變量錯誤提示設為報錯
+  },
+  globals: {
+    ElMessage: 'readonly',
+    ElMessageBox: 'readonly',
+    ElLoading: 'readonly'
   }
 }
