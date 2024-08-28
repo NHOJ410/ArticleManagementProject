@@ -3,7 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
-    { path: '/login', component: () => import('@/views/login/loginPage.vue') }, // 一級路由 - 登入頁面
+    { path: '/login', component: () => import('@/views/login/LoginPage.vue') }, // 一級路由 - 登入頁面
     {
       path: '/',
       component: () => import('@/views/layout/LayoutContainer.vue'), // 一級路由 - 首頁(路由架子)
