@@ -31,13 +31,19 @@ export const useUserStore = defineStore(
       userInfo.value = data.data
     }
 
+    const setUserInfo = (obj) => {
+      // 設定用戶個人訊息
+      userInfo.value = obj
+    }
+
     return {
       //  最後別忘記要 return 出去!
       token,
       setToken,
       removeToken,
       userInfo,
-      getUserInfo
+      getUserInfo,
+      setUserInfo
     }
   },
   {

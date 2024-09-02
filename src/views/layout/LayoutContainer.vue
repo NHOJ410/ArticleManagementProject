@@ -11,10 +11,33 @@ import {
 } from '@element-plus/icons-vue'
 import avatar from '@/assets/default.png'
 import { useUserStore } from '@/stores' // 導入 user倉庫
+import router from '@/router'
+const useStore = useUserStore() // 定義 user倉庫方法
+useStore.getUserInfo() // 調用 Pinia 倉庫中  請求用戶基本訊息的函數
 
-const useStore = useUserStore()
+const handleCommand = async (key) => {
+  if (key === 'logout') {
+    try {
+      // 顯示確認對話框
+      await ElMessageBox.confirm('你確定要退出登入嗎?', '溫馨提示', {
+        type: 'warning',
+        confirmButtonText: '是的 ! 退出登入',
+        cancelButtonText: '取消'
+      })
 
-useStore.getUserInfo()
+      // 如果用戶點擊「退出登入」，繼續執行以下操作
+      useStore.removeToken() // 清空用戶token
+      useStore.setUserInfo({}) // 清空用戶訊息
+      router.push('/login') // 跳轉到登入頁面
+    } catch (error) {
+      // 如果用戶點擊了「取消」，或者其他原因導致錯誤，這裡可以處理錯誤
+      // 這裡你可以選擇不做任何處理，因為用戶取消了操作
+    }
+  } else {
+    // 處理其他按鈕的點擊事件
+    router.push(`/user/${key}`)
+  }
+}
 </script>
 
 <template>
@@ -58,10 +81,14 @@ useStore.getUserInfo()
     </el-aside>
     <el-container>
       <el-header>
-        <div>黑馬程序員：<strong>小帥鵬</strong></div>
-        <el-dropdown placement="bottom-end">
+        <div>
+          用戶：<strong>{{
+            useStore.userInfo.nickname || useStore.userInfo.username
+          }}</strong>
+        </div>
+        <el-dropdown placement="bottom-end" @command="handleCommand">
           <span class="el-dropdown__box">
-            <el-avatar :src="avatar" />
+            <el-avatar :src="useStore.userInfo.user_pic || avatar" />
             <el-icon><CaretBottom /></el-icon>
           </span>
           <template #dropdown>
@@ -85,7 +112,7 @@ useStore.getUserInfo()
       <el-main>
         <router-view></router-view>
       </el-main>
-      <el-footer>大事件 ©2023 Created by 黑馬程序員</el-footer>
+      <el-footer>文章管理項目 ©2024 Created by John</el-footer>
     </el-container>
   </el-container>
 </template>
@@ -126,8 +153,9 @@ useStore.getUserInfo()
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 14px;
+    font-size: 16px;
     color: #666;
+    letter-spacing: 8px;
   }
 }
 </style>
