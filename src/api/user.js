@@ -17,8 +17,6 @@ export const userRegisterService = ({ username, password, repassword }) => {
   })
 }
 
-// ------------------------------
-
 // 登入請求
 
 export const userLoginService = ({ username, password }) => {
@@ -32,5 +30,13 @@ export const userLoginService = ({ username, password }) => {
       username,
       password
     }
+  })
+}
+
+// 獲取用戶個人訊息請求
+
+export const userGetInfoService = () => {
+  return request({
+    url: '/my/userinfo'
   })
 }

@@ -38,7 +38,6 @@ const register = async () => {
 // 登入按鈕 事件處理函數
 
 const login = async () => {
-  console.log(1)
   await form.value.validate()
   const {
     data: { token }

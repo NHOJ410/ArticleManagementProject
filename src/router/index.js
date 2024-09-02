@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { useUserStore } from '@/stores' // 導入 user倉庫
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -32,6 +33,29 @@ const router = createRouter({
       ]
     }
   ]
+})
+
+// 配置全局前置導航守衛
+router.beforeEach((to) => {
+  //  如果Pinia裡面沒有token的話 , 就要攔截 並且強制跳轉到 /login 登入頁面
+  const userStore = useUserStore() //  建立user倉庫變量
+  if (!userStore.token && to.path !== '/login') {
+    //  判斷如果沒有登入的情況
+
+    //  可以調用 ElMessage 給個提示框
+    ElMessage({
+      message: '你好像還沒有登入! , 請先登入帳號',
+      type: 'error',
+      duration: 3000,
+      offset: 64
+    })
+
+    //  跳轉到登入頁面 , 按照影片解釋 直接用 return 跳轉即可!
+
+    return './login'
+  }
+
+  return
 })
 
 export default router

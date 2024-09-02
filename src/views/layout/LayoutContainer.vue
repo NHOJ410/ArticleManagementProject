@@ -10,6 +10,11 @@ import {
   CaretBottom
 } from '@element-plus/icons-vue'
 import avatar from '@/assets/default.png'
+import { useUserStore } from '@/stores' // 導入 user倉庫
+
+const useStore = useUserStore()
+
+useStore.getUserInfo()
 </script>
 
 <template>
@@ -92,7 +97,7 @@ import avatar from '@/assets/default.png'
     background-color: #0e0d0d;
     &__logo {
       height: 120px;
-      background: url('@/assets/image.png') no-repeat center / 120px auto;
+      background: url('@/assets/image.png') no-repeat center / 100% auto;
     }
     .el-menu {
       border-right: none;
