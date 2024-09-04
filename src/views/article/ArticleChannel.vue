@@ -1,6 +1,6 @@
 <script setup>
 import { Delete, Edit } from '@element-plus/icons-vue'
-import { artGetChannelService } from '@/api/article'
+import { artGetChannelService, artDelChannelService } from '@/api/article'
 import { ref } from 'vue'
 import channelEdit from './components/channelEdit.vue' // 導入 channelEdit 局部組件
 
@@ -20,8 +20,24 @@ const getChannelList = async () => {
 getChannelList()
 
 // 刪除按鈕部分
-const isDelete = (row, $index) => {
-  console.log(row, $index)
+const isDelete = async (row) => {
+  try {
+    // 1. 在刪除前彈出提示框 , 因為加入了 await 如果點擊刪除時 才會往下走
+    await ElMessageBox.confirm('你確認要刪除該分類嗎?', '溫馨提示', {
+      confirmButtonText: '刪除',
+      cancelButtonText: '取消',
+      type: 'warning'
+    })
+
+    // 2. 走到這裡是點擊確認按鈕了! 那就發送請求刪除吧!
+    await artDelChannelService(row.id)
+    // 3. 刪除完成後彈出提示框
+    ElMessage.success('刪除成功!')
+    // 4. 最後重新渲染一次 更新數據 這樣就ok了!
+    getChannelList()
+  } catch (error) {
+    console.dir(error)
+  }
 }
 
 // 編輯按鈕部分

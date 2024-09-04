@@ -25,3 +25,15 @@ export const artEditChannelService = (data) => {
     data
   })
 }
+
+// 刪除文章分類
+
+export const artDelChannelService = (id) => {
+  return request({
+    url: '/my/cate/del',
+    method: 'delete',
+    params: {
+      id
+    }
+  })
+}
