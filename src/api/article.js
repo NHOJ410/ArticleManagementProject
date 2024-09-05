@@ -1,5 +1,6 @@
 import request from '@/utils/request'
 
+// ----------------- 文章分類頁面 -----------------------
 // 獲取文章分類數據
 export const artGetChannelService = () => {
   return request({
@@ -35,5 +36,16 @@ export const artDelChannelService = (id) => {
     params: {
       id
     }
+  })
+}
+
+// ----------------- 文章列表頁面 -----------------------
+
+// 獲取文章列表
+
+export const artGetChannelManageService = (params) => {
+  return request({
+    url: '/my/article/list',
+    params
   })
 }

@@ -2,24 +2,11 @@
 import { ref } from 'vue'
 import { Edit, Delete } from '@element-plus/icons-vue'
 import ChannelSelect from '@/views/article/components/channelSelect.vue'
+import { artGetChannelManageService } from '@/api/article.js'
+import { formatDate } from '@/utils/formatDate'
 
-const articleList = ref([
-  {
-    Id: 5961,
-    title: '文章1',
-    pub_date: '2022-07-10 14:53:52.604',
-    state: '已發布',
-    cate_name: '體育'
-  },
-  {
-    Id: 5962,
-    title: '文章2',
-    pub_date: '2022-07-10 14:54:30.904',
-    state: null,
-    cate_name: '生物'
-  }
-])
-
+const articleList = ref([]) // 文章列表數據
+const articleTotal = ref(0) // 文章總數量
 // 編輯按紐
 const onEdit = (row) => {
   console.log(row)
@@ -36,6 +23,16 @@ const params = ref({
   cate_id: '', // 文章分類 id
   state: '' // 文章發布狀態 (參數是中文)
 })
+
+// 封裝獲取文章列表數據
+const getArticleList = async () => {
+  const result = await artGetChannelManageService(params.value)
+  // 將獲取到的數據存入到上面準備好的空數組中
+  articleList.value = result.data.data // 文章列表數據
+  articleTotal.value = result.data.total // 文章總數量
+}
+// 一進頁面就要渲染 , 直接調用即可!
+getArticleList()
 </script>
 
 <template>
@@ -78,7 +75,11 @@ const params = ref({
         </template>
       </el-table-column>
       <el-table-column prop="cate_name" label="分類"></el-table-column>
-      <el-table-column prop="pub_date" label="發表時間"></el-table-column>
+      <el-table-column prop="pub_date" label="發表時間">
+        <template #default="{ row }">
+          {{ formatDate(row.pub_date) }}
+        </template>
+      </el-table-column>
       <el-table-column prop="state" label="狀態"></el-table-column>
       <el-table-column prop="" label="操作" width="140px">
         <!-- 利用作用域插槽 row 可以獲取當前行的數據 ==> 相當於 v-for 裡面的 item -->
