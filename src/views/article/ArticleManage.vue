@@ -7,6 +7,7 @@ import { formatDate } from '@/utils/formatDate'
 
 const articleList = ref([]) // 文章列表數據
 const articleTotal = ref(0) // 文章總數量
+const loading = ref(false)
 // 編輯按紐
 const onEdit = (row) => {
   console.log(row)
@@ -19,20 +20,44 @@ const onDel = (row) => {
 // 獲取文章列表參數
 const params = ref({
   pagenum: 1, // 當前分頁數
-  pagesize: '15', // 單頁面需要的數據數量
+  pagesize: 15, // 單頁面需要的數據數量
   cate_id: '', // 文章分類 id
   state: '' // 文章發布狀態 (參數是中文)
 })
 
 // 封裝獲取文章列表數據
 const getArticleList = async () => {
+  loading.value = true
   const result = await artGetChannelManageService(params.value)
   // 將獲取到的數據存入到上面準備好的空數組中
   articleList.value = result.data.data // 文章列表數據
   articleTotal.value = result.data.total // 文章總數量
+  loading.value = false
 }
 // 一進頁面就要渲染 , 直接調用即可!
 getArticleList()
+
+// 處理分頁邏輯
+
+// 切換單頁面顯示的數據數量
+const onSizeChange = (size) => {
+  // 只要每條數據數量變化了 , 那麼就切換回第一頁 , 因為原本的數據大概率就不在原來的那一頁了!
+  // 所以點擊 切換單頁面顯示數據數量時 自動切換回第一頁
+  params.value.pagenum = 1
+  // 那接下來就是根據我們上面綁定的數據 , 來去和形參做賦值即可!
+  params.value.pagesize = size
+
+  // 別忘記要重新調用請求數據 重新渲染!
+  getArticleList()
+}
+
+// 切換分頁
+const onCurrentChange = (num) => {
+  // 那切換分頁也是一樣 直接和我們上面對應綁定的數據 來去和形參做賦值即可!
+  params.value.pagenum = num
+  // 別忘記要重新調用請求數據 重新渲染!
+  getArticleList()
+}
 </script>
 
 <template>
@@ -68,7 +93,12 @@ getArticleList()
     </el-form>
 
     <!-- 中間內容部分 -->
-    <el-table :data="articleList" style="width: 100%">
+    <el-table
+      :data="articleList"
+      style="width: 100%"
+      max-height="100%"
+      v-loading="loading"
+    >
       <el-table-column prop="title" label="文章標題">
         <template #default="{ row }">
           <el-link type="primary" :underline="false">{{ row.title }}</el-link>
@@ -101,6 +131,18 @@ getArticleList()
         </template>
       </el-table-column>
     </el-table>
+    <!-- 底部分頁部分 -->
+    <el-pagination
+      v-model:current-page="params.pagenum"
+      v-model:page-size="params.pagesize"
+      :page-sizes="[5, 10, 15, 20]"
+      :background="false"
+      layout="jumper , total, sizes, prev, pager, next, "
+      :total="articleTotal"
+      @size-change="onSizeChange"
+      @current-change="onCurrentChange"
+      style="margin-top: 20px; justify-content: flex-end"
+    />
   </PageContainer>
 </template>
 
