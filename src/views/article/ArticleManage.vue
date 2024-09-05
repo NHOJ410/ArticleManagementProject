@@ -8,6 +8,7 @@ import { formatDate } from '@/utils/formatDate'
 const articleList = ref([]) // 文章列表數據
 const articleTotal = ref(0) // 文章總數量
 const loading = ref(false)
+
 // 編輯按紐
 const onEdit = (row) => {
   console.log(row)
@@ -58,6 +59,26 @@ const onCurrentChange = (num) => {
   // 別忘記要重新調用請求數據 重新渲染!
   getArticleList()
 }
+
+// 搜索按鈕
+const onSearch = () => {
+  // 點擊搜索按鈕時要重製回第一頁
+  params.value.pagenum = 1
+  // 直接發請求即可!
+  getArticleList()
+}
+
+// 重製按鈕
+const onReset = () => {
+  // 點擊重製按鈕時要重製回第一頁
+  params.value.pagenum = 1
+  // 並且要把相關的 參數清空
+  params.value.cate_id = ''
+  params.value.state = ''
+
+  // 最後再重新發一次請求渲染即可!
+  getArticleList()
+}
 </script>
 
 <template>
@@ -85,10 +106,10 @@ const onCurrentChange = (num) => {
           <el-option label="草稿" value="草稿"></el-option>
         </el-select>
       </el-form-item>
-      <!-- 確認和取消部分 -->
+      <!-- 搜索和重製按鈕部分 -->
       <el-form-item>
-        <el-button type="primary">確認</el-button>
-        <el-button>取消</el-button>
+        <el-button type="primary" @click="onSearch">搜索</el-button>
+        <el-button @click="onReset">重製</el-button>
       </el-form-item>
     </el-form>
 
@@ -105,7 +126,7 @@ const onCurrentChange = (num) => {
         </template>
       </el-table-column>
       <el-table-column prop="cate_name" label="分類"></el-table-column>
-      <el-table-column prop="pub_date" label="發表時間">
+      <el-table-column prop="pub_date" label="發布時間">
         <template #default="{ row }">
           {{ formatDate(row.pub_date) }}
         </template>
@@ -130,6 +151,11 @@ const onCurrentChange = (num) => {
           />
         </template>
       </el-table-column>
+
+      <!-- 空數據的處理 el-empty組件 -->
+      <template #empty>
+        <el-empty description="沒有找到相關的數據!" />
+      </template>
     </el-table>
     <!-- 底部分頁部分 -->
     <el-pagination
