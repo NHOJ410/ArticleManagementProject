@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { useUserStore } from '@/stores' //  導入 user倉庫
 import { ElMessage } from 'element-plus' // 導入 elementPlus 裡面的 消息提示
-const router = '@/router' // 導入 VueRouter
+const router = 'vue-router' // 導入 VueRouter
 
 const baseURL = 'http://big-event-vue-api-t.itheima.net'
 
