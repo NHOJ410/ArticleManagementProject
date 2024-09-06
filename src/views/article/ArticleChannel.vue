@@ -2,7 +2,7 @@
 import { Delete, Edit } from '@element-plus/icons-vue'
 import { artGetChannelService, artDelChannelService } from '@/api/article'
 import { ref } from 'vue'
-import channelEdit from './components/channelEdit.vue' // 導入 channelEdit 局部組件
+import ChannelEdit from '@/views/article/components/ChannelEdit.vue' // 導入 channelEdit 局部組件
 
 const channelList = ref([]) //  存儲文章分類列表
 const isLoading = ref(false) // 控制 v-loading 效果的變量
@@ -90,7 +90,7 @@ const onSuccess = () => {
       </template>
     </el-table>
     <!-- 封裝的彈層組件 -->
-    <channelEdit ref="editDom" @success="onSuccess"></channelEdit>
+    <ChannelEdit ref="editDom" @success="onSuccess"></ChannelEdit>
   </PageContainer>
 </template>
 

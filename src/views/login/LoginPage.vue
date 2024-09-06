@@ -139,6 +139,7 @@ const rules = {
             type="password"
             placeholder="請輸入密碼"
             v-model="formModel.password"
+            show-password
           ></el-input>
         </el-form-item>
         <el-form-item prop="repassword">
@@ -147,6 +148,7 @@ const rules = {
             type="password"
             placeholder="請再次輸入密碼"
             v-model="formModel.repassword"
+            show-password
           ></el-input>
         </el-form-item>
         <el-form-item>
@@ -197,6 +199,7 @@ const rules = {
             type="password"
             placeholder="請輸入密碼"
             v-model="formModel.password"
+            show-password
           ></el-input>
         </el-form-item>
         <el-form-item class="flex">

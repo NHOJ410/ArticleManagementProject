@@ -1,18 +1,30 @@
 <script setup>
 import { ref } from 'vue'
 import { Edit, Delete } from '@element-plus/icons-vue'
-import ChannelSelect from '@/views/article/components/channelSelect.vue'
+// 引入組件
+import ChannelSelect from './components/ChannelSelect.vue'
+import ArticlelDrawer from './components/ArticlelDrawer.vue'
+// 引入api
 import { artGetChannelManageService } from '@/api/article.js'
+// 引入插件
 import { formatDate } from '@/utils/formatDate'
 
 const articleList = ref([]) // 文章列表數據
 const articleTotal = ref(0) // 文章總數量
-const loading = ref(false)
+const loading = ref(false) // v-loading 效果的變量
+const drawerDom = ref(null) // 獲取 ArticleDrawer組件的 DOM元素
 
+// 發布文章按鈕
+const addArticle = () => {
+  // 點擊後 讓控制抽屜組件顯示隱藏的變量為 true 就可以了!
+  drawerDom.value.openDrawer({})
+}
 // 編輯按紐
 const onEdit = (row) => {
-  console.log(row)
+  // 點擊後 讓控制抽屜組件顯示隱藏的變量為 true 就可以了! , 並且把 row(文章詳情資訊) 傳入進去 方便做數據的回顯
+  drawerDom.value.openDrawer(row)
 }
+
 // 刪除按鈕
 const onDel = (row) => {
   console.log(row)
@@ -39,7 +51,6 @@ const getArticleList = async () => {
 getArticleList()
 
 // 處理分頁邏輯
-
 // 切換單頁面顯示的數據數量
 const onSizeChange = (size) => {
   // 只要每條數據數量變化了 , 那麼就切換回第一頁 , 因為原本的數據大概率就不在原來的那一頁了!
@@ -85,7 +96,7 @@ const onReset = () => {
   <!-- PageContainer組件 卡片部分 -->
   <PageContainer title="文章管理頁面">
     <template #extra>
-      <el-button type="primary">發布文章</el-button>
+      <el-button type="primary" @click="addArticle">發布文章</el-button>
     </template>
 
     <!-- 上面文章分類和發布狀態下拉框 -->
@@ -169,7 +180,15 @@ const onReset = () => {
       @current-change="onCurrentChange"
       style="margin-top: 20px; justify-content: flex-end"
     />
+
+    <!-- 新增文章部分 抽屜組件 -->
+    <ArticlelDrawer ref="drawerDom"></ArticlelDrawer>
   </PageContainer>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+:deep(.drawer-body) {
+  border-radius: 12px 0 0 12px;
+  background: linear-gradient(80deg, rgb(243, 247, 246), rgb(183, 241, 241));
+}
+</style>
