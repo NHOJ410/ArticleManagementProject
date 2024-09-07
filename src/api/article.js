@@ -55,3 +55,22 @@ export const artPostArticleManageService = (data) => {
     data
   })
 }
+
+// 獲取文章詳情
+export const artGetArticleContentService = (id) => {
+  return request({
+    url: '/my/article/info',
+    params: {
+      id
+    }
+  })
+}
+
+// 更新文章內容
+export const artEditArticleContentService = (data) => {
+  return request({
+    url: '/my/article/info',
+    method: 'put',
+    data
+  })
+}
