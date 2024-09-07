@@ -9,7 +9,6 @@ export const artGetChannelService = () => {
 }
 
 // 新增文章分類
-
 export const artAddChannelService = (data) => {
   return request({
     url: '/my/cate/add',
@@ -28,7 +27,6 @@ export const artEditChannelService = (data) => {
 }
 
 // 刪除文章分類
-
 export const artDelChannelService = (id) => {
   return request({
     url: '/my/cate/del',
@@ -42,10 +40,18 @@ export const artDelChannelService = (id) => {
 // ----------------- 文章列表頁面 -----------------------
 
 // 獲取文章列表
-
 export const artGetChannelManageService = (params) => {
   return request({
     url: '/my/article/list',
     params
+  })
+}
+
+// 發布文章 注意接口文檔需求 data 要是一個 FormData格式的對象
+export const artPostArticleManageService = (data) => {
+  return request({
+    url: '/my/article/add',
+    method: 'post',
+    data
   })
 }

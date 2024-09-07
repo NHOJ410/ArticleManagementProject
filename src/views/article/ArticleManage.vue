@@ -24,12 +24,10 @@ const onEdit = (row) => {
   // 點擊後 讓控制抽屜組件顯示隱藏的變量為 true 就可以了! , 並且把 row(文章詳情資訊) 傳入進去 方便做數據的回顯
   drawerDom.value.openDrawer(row)
 }
-
 // 刪除按鈕
 const onDel = (row) => {
   console.log(row)
 }
-
 // 獲取文章列表參數
 const params = ref({
   pagenum: 1, // 當前分頁數
@@ -90,11 +88,27 @@ const onReset = () => {
   // 最後再重新發一次請求渲染即可!
   getArticleList()
 }
+
+// 監聽 抽屜組件回傳過來的事件 (添加/編輯按紐)
+const onAdd = (state) => {
+  // 因為前面已經對添加按鈕傳遞參數 add 了 , 如果 state 為 add 說明是添加按鈕!
+  if (state === 'add') {
+    // 因為是渲染按鈕 , 所以要跳轉到最後一頁 (案例需求)
+    const lastPage = Math.ceil((articleTotal.value + 1) / params.value.pagesize)
+    // 將拿到的最後一頁去更新 請求的 當前分頁數
+    params.value.pagenum = lastPage
+    // 最後重新發一次請求即可!
+    getArticleList()
+  }
+
+  // 走到這裡 , 說明點擊的是編輯按紐 那就直接渲染當前頁面即可
+  getArticleList()
+}
 </script>
 
 <template>
   <!-- PageContainer組件 卡片部分 -->
-  <PageContainer title="文章管理頁面">
+  <PageContainer title="文章管理頁面" style="border-radius: 10px">
     <template #extra>
       <el-button type="primary" @click="addArticle">發布文章</el-button>
     </template>
@@ -182,13 +196,12 @@ const onReset = () => {
     />
 
     <!-- 新增文章部分 抽屜組件 -->
-    <ArticlelDrawer ref="drawerDom"></ArticlelDrawer>
+    <ArticlelDrawer ref="drawerDom" @success="onAdd"></ArticlelDrawer>
   </PageContainer>
 </template>
 
 <style lang="scss" scoped>
 :deep(.drawer-body) {
-  border-radius: 12px 0 0 12px;
   background: linear-gradient(80deg, rgb(243, 247, 246), rgb(183, 241, 241));
 }
 </style>

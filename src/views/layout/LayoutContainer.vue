@@ -121,13 +121,14 @@ const handleCommand = async (key) => {
 .layout-container {
   height: 100vh;
   .el-aside {
-    background-color: #0e0d0d;
+    background-color: #171717;
     &__logo {
       height: 120px;
-      background: url('@/assets/image.png') no-repeat center / 100% auto;
+      background: url('@/assets/1.jpg') no-repeat center / 100% auto;
     }
-    .el-menu {
+    :deep(.el-menu) {
       border-right: none;
+      background-color: #171717;
     }
   }
   .el-header {

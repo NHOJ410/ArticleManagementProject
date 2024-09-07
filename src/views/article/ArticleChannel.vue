@@ -57,7 +57,7 @@ const onSuccess = () => {
 
 <template>
   <!-- PageContainer組件 卡片部分 -->
-  <PageContainer title="文章分類頁面">
+  <PageContainer title="文章分類頁面" style="border-radius: 10px">
     <template #extra>
       <el-button type="primary" @click="addChannel">添加分類</el-button>
     </template>

@@ -1,6 +1,7 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, nextTick } from 'vue'
 import { Plus } from '@element-plus/icons-vue'
+import { artPostArticleManageService } from '@/api/article'
 // VueQuill 富文本編輯器
 import { QuillEditor } from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css'
@@ -10,6 +11,7 @@ import ChannelSelect from './ChannelSelect.vue' // 下拉框組件
 
 const visibleDrawer = ref(false) // 控制抽屜組件顯示隱藏的變量
 const imgURL = ref('') // 用來存儲上傳圖片的地址
+const vueQuill = ref(null) // 獲取富文本編輯器的DOM 使用裡面的 setHTML() 來重製輸入框
 
 // 基礎表單數據
 const defaultFormData = {
@@ -28,12 +30,13 @@ const onUpload = (uploadFile) => {
   // 使用 URL.createObjectURL() 方法來解析 uploadFile所提供的 raw 形成一個內網圖片地址 , 並且存到上面準備好的圖片變量中!
   imgURL.value = URL.createObjectURL(uploadFile.raw) // 這樣網頁中就可以顯示了
   // 最後別忘記要存入到 formData中
-  formData.value.cover_img = imgURL.value
+  formData.value.cover_img = uploadFile.raw
 }
 
 //  創建控制抽屜組件顯示的變量 , 並且傳入參數 row 等等要用這個來判斷 是添加還是編輯
-const openDrawer = (row) => {
+const openDrawer = async (row) => {
   visibleDrawer.value = true
+  await nextTick() // 在開始抽屜組件時 , 調用 nextTick() 等待DOM加載完成!
   // 解決 row 拿回來的數據不完全的問題 根據 row.id 做判斷
   //  如果有 row.id 說明是 [ 編輯按紐狀態 ] 就要發請求獲取詳情數據
   if (row.id) {
@@ -41,7 +44,48 @@ const openDrawer = (row) => {
   } else {
     //  如果 else 就是發布文章按鈕狀態 , 就要把表單清空 讓表單是乾淨的
     formData.value = { ...defaultFormData }
-    console.log('發布文章狀態')
+
+    imgURL.value = '' // 重製文章封面
+    vueQuill.value.setHTML('') // 重製富文本輸入框值 , 傳入空字符串就可以了!
+  }
+}
+
+// 表單校驗部分
+const rules = {
+  title: [{ required: true, message: '文章標題不能為空!', trigger: 'blur' }],
+  cate_id: [{ required: true, message: '請選擇一個選項!', trigger: 'blur' }]
+}
+
+//  定義 emit 子傳父
+const emit = defineEmits(['success'])
+
+// 發布文章 , 草稿按鈕
+const onPublish = async (state) => {
+  // 將我們需要的參數傳入進去 [ state 需要是中文 已發布/草稿 來辨別 ]
+  formData.value.state = state
+
+  //  按照接口文檔需求 要將 [普通對象] --> 轉換成 [FormData對象]
+  const fd = new FormData() //  new一個 FormData對象
+
+  //  利用for in 遍歷我們的表單數據
+  for (let key in formData.value) {
+    fd.append(key, formData.value[key]) //  利用 FormData提供的 append方法 , 將我們表單數據的值 , 加入到我們創建的 FormData對象裡面
+  }
+
+  //  發請求前 判斷是編輯操作還是添加操作
+
+  //  有 id 說明是編輯操作 , 這裡先console.log預留
+  if (formData.value.id) {
+    console.log('編輯操作')
+  } else {
+    //  如果沒有 id 說明是添加操作 , 那直接用原本的邏輯就可以了!
+    await artPostArticleManageService(fd) //  這裡注意參數是要傳入我們剛剛轉換完成的 [formData對象!]
+
+    // 發布成功後給個提示框並且關閉抽屜組件即可!
+    ElMessage.success('發布文章成功!')
+    visibleDrawer.value = false
+    //  使用 emit 通知父組件 添加成功!
+    emit('success', 'add') //  並且要區分添加按鈕還是編輯按紐 , 需要額外傳遞參數
   }
 }
 
@@ -55,13 +99,13 @@ defineExpose({
   <!-- 抽屜組件 -->
   <el-drawer
     v-model="visibleDrawer"
-    title="文章"
+    title="發布文章"
     direction="rtl"
-    size="50%"
+    size="100%"
     class="drawer-body"
   >
     <!-- 發表文章表單 -->
-    <el-form :model="formData" ref="formRef" label-width="100px">
+    <el-form :model="formData" ref="formRef" label-width="100px" :rules="rules">
       <!-- 文章標題區域 -->
       <el-form-item label="文章標題 : " prop="title">
         <el-input v-model="formData.title" placeholder="請輸入標題"></el-input>
@@ -92,13 +136,16 @@ defineExpose({
             theme="snow"
             v-model:content="formData.content"
             contentType="html"
+            ref="vueQuill"
           />
         </div>
       </el-form-item>
       <!-- 底部按鈕部分 -->
       <el-form-item>
-        <el-button type="primary">發布</el-button>
-        <el-button type="info">草稿</el-button>
+        <el-button type="primary" @click="onPublish('已发布')"
+          >發布文章</el-button
+        >
+        <el-button type="info" @click="onPublish('草稿')">草稿</el-button>
       </el-form-item>
     </el-form>
   </el-drawer>
@@ -138,7 +185,7 @@ defineExpose({
 .editor {
   width: 100%;
   :deep(.ql-editor) {
-    min-height: 200px;
+    min-height: 400px;
   }
 }
 </style>
