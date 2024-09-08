@@ -103,7 +103,7 @@ const handleCommand = async (key) => {
                 >重置密碼</el-dropdown-item
               >
               <el-dropdown-item command="logout" :icon="SwitchButton"
-                >退出登錄</el-dropdown-item
+                >退出登入</el-dropdown-item
               >
             </el-dropdown-menu>
           </template>

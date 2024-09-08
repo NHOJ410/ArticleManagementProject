@@ -40,3 +40,12 @@ export const userGetInfoService = () => {
     url: '/my/userinfo'
   })
 }
+
+// 修改個人訊息請求
+export const userEditInfoService = (data) => {
+  return request({
+    url: '/my/userinfo',
+    method: 'put',
+    data
+  })
+}

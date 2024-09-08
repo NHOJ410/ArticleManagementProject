@@ -8,7 +8,7 @@ const baseURL = 'http://big-event-vue-api-t.itheima.net'
 const instance = axios.create({
   //  基地址 , 超時時間
   baseURL,
-  timeout: 10000
+  timeout: 20000
 })
 
 // 添加請求攔截器

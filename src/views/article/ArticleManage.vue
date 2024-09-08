@@ -4,8 +4,12 @@ import { Edit, Delete } from '@element-plus/icons-vue'
 // 引入組件
 import ChannelSelect from './components/ChannelSelect.vue'
 import ArticlelDrawer from './components/ArticlelDrawer.vue'
+import ArticleContent from '@/views/article/components/ArticleContent.vue'
 // 引入api
-import { artGetChannelManageService } from '@/api/article.js'
+import {
+  artGetChannelManageService,
+  artDelArticleContentService
+} from '@/api/article.js'
 // 引入插件
 import { formatDate } from '@/utils/formatDate'
 
@@ -14,20 +18,6 @@ const articleTotal = ref(0) // 文章總數量
 const loading = ref(false) // v-loading 效果的變量
 const drawerDom = ref(null) // 獲取 ArticleDrawer組件的 DOM元素
 
-// 發布文章按鈕
-const addArticle = () => {
-  // 點擊後 讓控制抽屜組件顯示隱藏的變量為 true 就可以了!
-  drawerDom.value.openDrawer({})
-}
-// 編輯按紐
-const onEdit = (row) => {
-  // 點擊後 讓控制抽屜組件顯示隱藏的變量為 true 就可以了! , 並且把 row(文章詳情資訊) 傳入進去 方便做數據的回顯
-  drawerDom.value.openDrawer(row)
-}
-// 刪除按鈕
-const onDel = (row) => {
-  console.log(row)
-}
 // 獲取文章列表參數
 const params = ref({
   pagenum: 1, // 當前分頁數
@@ -47,19 +37,6 @@ const getArticleList = async () => {
 }
 // 一進頁面就要渲染 , 直接調用即可!
 getArticleList()
-
-// 處理分頁邏輯
-// 切換單頁面顯示的數據數量
-const onSizeChange = (size) => {
-  // 只要每條數據數量變化了 , 那麼就切換回第一頁 , 因為原本的數據大概率就不在原來的那一頁了!
-  // 所以點擊 切換單頁面顯示數據數量時 自動切換回第一頁
-  params.value.pagenum = 1
-  // 那接下來就是根據我們上面綁定的數據 , 來去和形參做賦值即可!
-  params.value.pagesize = size
-
-  // 別忘記要重新調用請求數據 重新渲染!
-  getArticleList()
-}
 
 // 切換分頁
 const onCurrentChange = (num) => {
@@ -86,6 +63,42 @@ const onReset = () => {
   params.value.state = ''
 
   // 最後再重新發一次請求渲染即可!
+  getArticleList()
+}
+
+// 發布文章按鈕
+const addArticle = () => {
+  // 點擊後 讓控制抽屜組件顯示隱藏的變量為 true 就可以了!
+  drawerDom.value.openDrawer({})
+}
+// 編輯按紐
+const onEdit = (row) => {
+  // 點擊後 讓控制抽屜組件顯示隱藏的變量為 true 就可以了! , 並且把 row(文章詳情資訊) 傳入進去 方便做數據的回顯
+  drawerDom.value.openDrawer(row)
+}
+// 刪除按鈕
+const onDel = async (row) => {
+  await artDelArticleContentService(row.id)
+  getArticleList()
+  ElMessage.success('刪除文章成功!')
+}
+
+// 查看文章內容
+const content = ref(null)
+const showArticle = () => {
+  content.value.showArticle()
+}
+
+// 處理分頁邏輯
+// 切換單頁面顯示的數據數量
+const onSizeChange = (size) => {
+  // 只要每條數據數量變化了 , 那麼就切換回第一頁 , 因為原本的數據大概率就不在原來的那一頁了!
+  // 所以點擊 切換單頁面顯示數據數量時 自動切換回第一頁
+  params.value.pagenum = 1
+  // 那接下來就是根據我們上面綁定的數據 , 來去和形參做賦值即可!
+  params.value.pagesize = size
+
+  // 別忘記要重新調用請求數據 重新渲染!
   getArticleList()
 }
 
@@ -147,10 +160,12 @@ const onAdd = (state) => {
     >
       <el-table-column prop="title" label="文章標題">
         <template #default="{ row }">
-          <el-link type="primary" :underline="false">{{ row.title }}</el-link>
+          <el-link type="primary" :underline="false" @click="showArticle">{{
+            row.title
+          }}</el-link>
         </template>
       </el-table-column>
-      <el-table-column prop="cate_name" label="分類"></el-table-column>
+      <el-table-column prop="cate_name" label="分類名稱"></el-table-column>
       <el-table-column prop="pub_date" label="發布時間">
         <template #default="{ row }">
           {{ formatDate(row.pub_date) }}
@@ -160,6 +175,7 @@ const onAdd = (state) => {
       <el-table-column prop="" label="操作" width="140px">
         <!-- 利用作用域插槽 row 可以獲取當前行的數據 ==> 相當於 v-for 裡面的 item -->
         <template #default="{ row }">
+          <!--編輯按紐--->
           <el-button
             type="primary"
             :icon="Edit"
@@ -167,6 +183,7 @@ const onAdd = (state) => {
             plain
             @click="onEdit(row)"
           />
+          <!--刪除按紐--->
           <el-button
             type="danger"
             :icon="Delete"
@@ -195,8 +212,10 @@ const onAdd = (state) => {
       style="margin-top: 20px; justify-content: flex-end"
     />
 
-    <!-- 新增文章部分 抽屜組件 -->
+    <!-- 抽屜組件 -->
     <ArticlelDrawer ref="drawerDom" @success="onAdd"></ArticlelDrawer>
+    <!-- 文章內容部分 -->
+    <ArticleContent ref="content"></ArticleContent>
   </PageContainer>
 </template>
 

@@ -20,6 +20,7 @@ import axios from 'axios'
 const visibleDrawer = ref(false) // 控制抽屜組件顯示隱藏的變量
 const imgURL = ref('') // 用來存儲上傳圖片的地址
 const vueQuill = ref(null) // 獲取富文本編輯器的DOM 使用裡面的 setHTML() 來重製輸入框
+const delayTime = 1000
 
 // 基礎表單數據
 const defaultFormData = {
@@ -141,63 +142,82 @@ defineExpose({
 </script>
 
 <template>
-  <!-- 抽屜組件 -->
-  <el-drawer
-    v-model="visibleDrawer"
-    title="發布文章"
-    direction="rtl"
-    size="100%"
-    class="drawer-body"
-    open-delay="1200"
-  >
-    <!-- 發表文章表單 -->
-    <el-form :model="formData" ref="formRef" label-width="100px" :rules="rules">
-      <!-- 文章標題區域 -->
-      <el-form-item label="文章標題 : " prop="title">
-        <el-input v-model="formData.title" placeholder="請輸入標題"></el-input>
-      </el-form-item>
-      <!-- 文章分類下拉框 -->
-      <el-form-item label="文章分類 : " prop="cate_id">
-        <ChannelSelect
-          v-model="formData.cate_id"
-          style="width: 100%"
-        ></ChannelSelect>
-      </el-form-item>
-      <!-- 文章封面部分(尚未製作) -->
-      <el-form-item label="文章封面 : " prop="cover_img">
-        <el-upload
-          class="avatar-uploader"
-          :show-file-list="false"
-          :auto-upload="false"
-          :on-change="onUpload"
-        >
-          <img v-if="imgURL" :src="imgURL" class="avatar" />
-          <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
-        </el-upload>
-      </el-form-item>
-      <!-- 文章內容部分(尚未製作) -->
-      <el-form-item label="文章內容 : " prop="content">
-        <div class="editor">
-          <QuillEditor
-            theme="snow"
-            v-model:content="formData.content"
-            contentType="html"
-            ref="vueQuill"
-          />
-        </div>
-      </el-form-item>
-      <!-- 底部按鈕部分 -->
-      <el-form-item>
-        <el-button type="primary" @click="onPublish('已发布')"
-          >發布文章</el-button
-        >
-        <el-button type="info" @click="onPublish('草稿')">草稿</el-button>
-      </el-form-item>
-    </el-form>
-  </el-drawer>
+  <div class="container">
+    <!-- 抽屜組件 -->
+    <el-drawer
+      v-model="visibleDrawer"
+      :title="formData.id ? '編輯文章' : '發布文章'"
+      direction="rtl"
+      size="100%"
+      class="drawer-body"
+      :open-delay="delayTime"
+    >
+      <!-- 發表文章表單 -->
+      <el-form
+        :model="formData"
+        ref="formRef"
+        label-width="100px"
+        :rules="rules"
+      >
+        <!-- 文章標題區域 -->
+        <el-form-item label="文章標題 : " prop="title">
+          <el-input
+            v-model="formData.title"
+            placeholder="請輸入標題"
+          ></el-input>
+        </el-form-item>
+        <!-- 文章分類下拉框 -->
+        <el-form-item label="文章分類 : " prop="cate_id">
+          <ChannelSelect
+            v-model="formData.cate_id"
+            style="width: 100%"
+          ></ChannelSelect>
+        </el-form-item>
+        <!-- 文章封面部分 -->
+        <el-form-item label="文章封面 : " prop="cover_img">
+          <el-upload
+            class="avatar-uploader"
+            :show-file-list="false"
+            :auto-upload="false"
+            :on-change="onUpload"
+          >
+            <img v-if="imgURL" :src="imgURL" class="avatar" />
+            <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
+          </el-upload>
+        </el-form-item>
+        <!-- 文章內容部分 -->
+        <el-form-item label="文章內容 : " prop="content">
+          <div class="editor">
+            <QuillEditor
+              theme="snow"
+              v-model:content="formData.content"
+              contentType="html"
+              ref="vueQuill"
+            />
+          </div>
+        </el-form-item>
+        <!-- 底部按鈕部分 -->
+        <el-form-item>
+          <el-button type="primary" @click="onPublish('已发布')"
+            >發布文章</el-button
+          >
+          <el-button type="info" @click="onPublish('草稿')">草稿</el-button>
+        </el-form-item>
+      </el-form>
+    </el-drawer>
+  </div>
 </template>
 
 <style lang="scss" scoped>
+:deep(.drawer-body) {
+  // 抽屜組件樣式
+  background: linear-gradient(80deg, rgb(191, 228, 219), rgb(163, 241, 241));
+}
+
+:deep(.el-drawer__title) {
+  font-size: 40px;
+}
+
 /* 上傳圖片部分 */
 .avatar-uploader {
   :deep() {
@@ -232,7 +252,7 @@ defineExpose({
   width: 100%;
   :deep(.ql-editor) {
     min-height: 400px;
-    font-size: 40px;
+    font-size: 20px;
   }
 }
 </style>

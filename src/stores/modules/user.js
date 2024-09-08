@@ -23,16 +23,15 @@ export const useUserStore = defineStore(
 
     const userInfo = ref({}) // 存儲用戶個人訊息
 
+    // 獲取用戶個人訊息數據
     const getUserInfo = async () => {
-      // 定義方法 來發送請求
-
       const { data } = await userGetInfoService() // 調用請求 , 拿到用戶個人訊息
 
       userInfo.value = data.data
     }
 
+    // 設定用戶個人訊息 ( 這裡是做退出登入的效果的 )
     const setUserInfo = (obj) => {
-      // 設定用戶個人訊息
       userInfo.value = obj
     }
 

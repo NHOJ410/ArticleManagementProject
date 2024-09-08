@@ -74,3 +74,15 @@ export const artEditArticleContentService = (data) => {
     data
   })
 }
+
+// 刪除文章內容
+
+export const artDelArticleContentService = (id) => {
+  return request({
+    url: '/my/article/info',
+    method: 'delete',
+    params: {
+      id
+    }
+  })
+}
