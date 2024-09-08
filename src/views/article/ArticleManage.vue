@@ -78,6 +78,12 @@ const onEdit = (row) => {
 }
 // 刪除按鈕
 const onDel = async (row) => {
+  await ElMessageBox.confirm('將永久刪除該文章，是否確認刪除?', '溫馨提示', {
+    confirmButtonText: '確認',
+    cancelButtonText: '取消',
+    type: 'warning'
+  })
+
   await artDelArticleContentService(row.id)
   getArticleList()
   ElMessage.success('刪除文章成功!')
