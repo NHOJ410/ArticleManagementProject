@@ -62,10 +62,11 @@ const submit = async () => {
   <PageContainer title="用戶基本資料" class="user-profile">
     <!-- 表單區域 -->
     <el-form
-      style="max-width: 800px"
+      label-width="60px"
       :model="userForm"
       :rules="rules"
       ref="formRef"
+      :hide-required-asterisk="true"
     >
       <el-form-item label="帳號 : " label-width="60px">
         <el-input v-model="userForm.username" disabled></el-input>

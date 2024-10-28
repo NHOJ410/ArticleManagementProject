@@ -45,7 +45,7 @@ const onUpload = (uploadFile) => {
 //  創建控制抽屜組件顯示的變量 , 並且傳入參數 row 等等要用這個來判斷 是添加還是編輯
 const openDrawer = async (row) => {
   visibleDrawer.value = true
-  await nextTick() // 在開始抽屜組件時 , 調用 nextTick() 等待DOM加載完成!
+  await nextTick() // 在開啟抽屜組件時 , 調用 nextTick() 等待DOM加載完成!
   // 解決 row 拿回來的數據不完全的問題 根據 row.id 做判斷
   //  如果有 row.id 說明是 [ 編輯按紐狀態 ] 就要發請求獲取詳情數據
 
@@ -182,7 +182,9 @@ defineExpose({
             :on-change="onUpload"
           >
             <img v-if="imgURL" :src="imgURL" class="avatar" />
-            <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
+            <el-icon v-else class="avatar-uploader-icon">
+              <Plus />
+            </el-icon>
           </el-upload>
         </el-form-item>
         <!-- 文章內容部分 -->
@@ -226,6 +228,7 @@ defineExpose({
       height: 178px;
       display: block;
     }
+
     .el-upload {
       border: 1px dashed var(--el-border-color);
       border-radius: 6px;
@@ -234,9 +237,11 @@ defineExpose({
       overflow: hidden;
       transition: var(--el-transition-duration-fast);
     }
+
     .el-upload:hover {
       border-color: var(--el-color-primary);
     }
+
     .el-icon.avatar-uploader-icon {
       font-size: 28px;
       color: #8c939d;
@@ -250,6 +255,7 @@ defineExpose({
 // VueQuill 富文本編輯器
 .editor {
   width: 100%;
+
   :deep(.ql-editor) {
     min-height: 400px;
     font-size: 20px;

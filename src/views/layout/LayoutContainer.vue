@@ -52,29 +52,41 @@ const handleCommand = async (key) => {
         router
       >
         <el-menu-item index="/article/channel">
-          <el-icon><Management /></el-icon>
+          <el-icon>
+            <Management />
+          </el-icon>
           <span>文章分類</span>
         </el-menu-item>
         <el-menu-item index="/article/manage">
-          <el-icon><Promotion /></el-icon>
+          <el-icon>
+            <Promotion />
+          </el-icon>
           <span>文章管理</span>
         </el-menu-item>
         <el-sub-menu index="/user">
           <template #title>
-            <el-icon><UserFilled /></el-icon>
+            <el-icon>
+              <UserFilled />
+            </el-icon>
             <span>個人中心</span>
           </template>
           <el-menu-item index="/user/profile">
-            <el-icon><User /></el-icon>
+            <el-icon>
+              <User />
+            </el-icon>
             <span>基本資料</span>
           </el-menu-item>
           <el-menu-item index="/user/avatar">
-            <el-icon><Crop /></el-icon>
+            <el-icon>
+              <Crop />
+            </el-icon>
             <span>更換頭像</span>
           </el-menu-item>
           <el-menu-item index="/user/password">
-            <el-icon><EditPen /></el-icon>
-            <span>重置密碼</span>
+            <el-icon>
+              <EditPen />
+            </el-icon>
+            <span>更改密碼</span>
           </el-menu-item>
         </el-sub-menu>
       </el-menu>
@@ -89,7 +101,9 @@ const handleCommand = async (key) => {
         <el-dropdown placement="bottom-end" @command="handleCommand">
           <span class="el-dropdown__box">
             <el-avatar :src="useStore.userInfo.user_pic || avatar" />
-            <el-icon><CaretBottom /></el-icon>
+            <el-icon>
+              <CaretBottom />
+            </el-icon>
           </span>
           <template #dropdown>
             <el-dropdown-menu>
@@ -120,25 +134,31 @@ const handleCommand = async (key) => {
 <style lang="scss" scoped>
 .layout-container {
   height: 100vh;
+
   .el-aside {
     background-color: #171717;
+
     &__logo {
       height: 120px;
       background: url('@/assets/1.jpg') no-repeat center / 100% auto;
     }
+
     :deep(.el-menu) {
       border-right: none;
       background-color: #171717;
     }
   }
+
   .el-header {
     background-color: #fff;
     display: flex;
     align-items: center;
     justify-content: space-between;
+
     .el-dropdown__box {
       display: flex;
       align-items: center;
+
       .el-icon {
         color: #999;
         margin-left: 10px;
@@ -150,6 +170,7 @@ const handleCommand = async (key) => {
       }
     }
   }
+
   .el-footer {
     display: flex;
     align-items: center;

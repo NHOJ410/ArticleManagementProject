@@ -49,3 +49,23 @@ export const userEditInfoService = (data) => {
     data
   })
 }
+
+// 更改密碼請求
+export const updatePasswordService = (data) => {
+  return request({
+    url: '/my/updatepwd',
+    method: 'PATCH',
+    data
+  })
+}
+
+// 更改用戶頭像請求
+export const updateAvatarService = (avatar) => {
+  return request({
+    url: '/my/update/avatar',
+    method: 'PATCH',
+    data: {
+      avatar
+    }
+  })
+}

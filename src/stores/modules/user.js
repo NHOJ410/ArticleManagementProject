@@ -35,6 +35,14 @@ export const useUserStore = defineStore(
       userInfo.value = obj
     }
 
+    // ------------- 用戶密碼部分 --------------
+    const userPassword = ref(null) // 存儲用戶密碼 ( 這裡是做修改密碼的效果的 )
+
+    // 用來設定用戶密碼的 action
+    const setPassword = (value) => {
+      userPassword.value = value
+    }
+
     return {
       //  最後別忘記要 return 出去!
       token,
@@ -42,10 +50,15 @@ export const useUserStore = defineStore(
       removeToken,
       userInfo,
       getUserInfo,
-      setUserInfo
+      setUserInfo,
+      userPassword,
+      setPassword
     }
   },
   {
-    persist: true // 使用插件實現持久化效果
+    persist: {
+      // 設置 token和 userInfo需要被持久化處理
+      pick: ['token', 'userInfo']
+    }
   }
 )

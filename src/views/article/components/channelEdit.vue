@@ -86,7 +86,12 @@ defineExpose({
     :title="formData.id ? '編輯分類' : '添加分類'"
     width="500"
   >
-    <el-form :model="formData" :rules="rules" ref="formRef">
+    <el-form
+      :model="formData"
+      :rules="rules"
+      ref="formRef"
+      :hide-required-asterisk="true"
+    >
       <!-- 分類名稱輸入框 -->
       <el-form-item label="分類名稱" prop="cate_name">
         <el-input
@@ -104,8 +109,8 @@ defineExpose({
     </el-form>
     <template #footer>
       <div class="dialog-footer">
-        <el-button @click="dialogVisible = false">取消</el-button>
         <el-button type="primary" @click="onSubmit">提交</el-button>
+        <el-button @click="dialogVisible = false">取消</el-button>
       </div>
     </template>
   </el-dialog>

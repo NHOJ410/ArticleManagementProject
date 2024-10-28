@@ -53,6 +53,9 @@ const login = async () => {
     offset: 64
   })
 
+  // 將密碼存到Pinia倉庫中 , 更改密碼需要用到
+  userStore.setPassword(formModel.value.password)
+
   // 跳轉到首頁
   router.push('/')
 }
@@ -231,21 +234,26 @@ const rules = {
 .login-page {
   height: 100vh;
   background: linear-gradient(to right, #a7a4a4, #f3f2f2);
+
   .bg {
     background: url('@/assets/bg3.webp') no-repeat center / cover;
     border-radius: 0 20px 20px 0;
   }
+
   .form {
     display: flex;
     flex-direction: column;
     justify-content: center;
     user-select: none;
+
     .title {
       margin: 0 auto;
     }
+
     .button {
       width: 100%;
     }
+
     .flex {
       width: 100%;
       display: flex;
