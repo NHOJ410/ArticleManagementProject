@@ -8,7 +8,7 @@ const router = createRouter({
     {
       path: '/',
       component: () => import('@/views/layout/LayoutContainer.vue'), // 一級路由 - 首頁(路由架子)
-      redirect: '/article/manage', // 如果訪問 / 路徑 , 直接重定向到 [文章管理頁面]
+      redirect: '/article/channel', // 如果訪問 / 路徑 , 直接重定向到 [文章管理頁面]
       children: [
         {
           path: '/article/manage',

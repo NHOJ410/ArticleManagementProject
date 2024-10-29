@@ -93,6 +93,9 @@ const updatePwd = async () => {
   // 發送請求 更改密碼
   await updatePasswordService(userParams.value)
 
+  // 將記住密碼的狀態設為 false
+  userStore.isRemember = false
+
   // 提示用戶更改成功
   ElMessage.success('密碼更改成功! , 三秒後將重新登入...')
 
