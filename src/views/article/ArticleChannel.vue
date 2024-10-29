@@ -1,39 +1,38 @@
 <script setup>
-import { Delete, Edit } from '@element-plus/icons-vue'
+import { ref, onMounted } from 'vue'
+import { Delete, Edit, Plus } from '@element-plus/icons-vue'
+// 導入api
 import { artGetChannelService, artDelChannelService } from '@/api/article'
-import { ref } from 'vue'
-import ChannelEdit from '@/views/article/components/ChannelEdit.vue' // 導入 channelEdit 局部組件
+// 導入組件
+import ChannelEdit from '@/views/article/components/channelEdit.vue' // 導入 channelEdit 局部組件
 
 const channelList = ref([]) //  存儲文章分類列表
 const isLoading = ref(false) // 控制 v-loading 效果的變量
 const editDom = ref(null) // 獲取channelEdit的組件實例
 
-//  發送文章分類列表請求
+//  封裝方法 , 來獲取文章分類列表
 const getChannelList = async () => {
   isLoading.value = true // 在獲取數據前 開啟loading效果
-  const result = await artGetChannelService()
+  const result = await artGetChannelService() // 發送請求獲取數據
   channelList.value = result.data.data //  存儲到上面創建的空數組中
   isLoading.value = false // 獲取到數據後 關閉 loading 效果即可!
 }
 
-// 一進頁面就要渲染 , 所以直接調用 發請求
-getChannelList()
+onMounted(() => {
+  getChannelList()
+})
 
 // 刪除按鈕部分
 const isDelete = async (row) => {
   try {
-    // 1. 在刪除前彈出提示框 , 因為加入了 await 如果點擊刪除時 才會往下走
     await ElMessageBox.confirm('你確認要刪除該分類嗎?', '溫馨提示', {
       confirmButtonText: '刪除',
       cancelButtonText: '取消',
       type: 'warning'
     })
 
-    // 2. 走到這裡是點擊確認按鈕了! 那就發送請求刪除吧!
     await artDelChannelService(row.id)
-    // 3. 刪除完成後彈出提示框
     ElMessage.success('刪除成功!')
-    // 4. 最後重新渲染一次 更新數據 這樣就ok了!
     getChannelList()
   } catch (error) {
     console.dir(error)
@@ -44,6 +43,7 @@ const isDelete = async (row) => {
 const isEdit = (row) => {
   editDom.value.open(row)
 }
+
 // 添加分類按鈕部分
 const addChannel = () => {
   editDom.value.open({})
@@ -51,47 +51,65 @@ const addChannel = () => {
 
 // 子組件 添加/更新數據成功
 const onSuccess = () => {
+  // 重新調用請求 , 渲染最新的數據
   getChannelList()
 }
 </script>
 
 <template>
-  <!-- PageContainer組件 卡片部分 -->
-  <PageContainer title="文章分類頁面" style="border-radius: 10px">
-    <template #extra>
-      <el-button type="primary" @click="addChannel">添加分類</el-button>
-    </template>
-
-    <el-table v-loading="isLoading" :data="channelList" style="width: 100%">
-      <el-table-column type="index" prop="" label="序號" width="100" />
-      <el-table-column prop="cate_name" label="分類名稱" />
-      <el-table-column prop="cate_alias" label="分類別名" />
-      <el-table-column prop="" label="操作" width="200">
-        <template #default="{ row, $index }">
-          <!-- 編輯按鈕部分 -->
-          <el-button
-            type="primary"
-            @click="isEdit(row, $index)"
-            :icon="Edit"
-            circle
-          ></el-button>
-          <!-- 刪除按鈕部分 -->
-          <el-button
-            type="danger"
-            @click="isDelete(row, $index)"
-            :icon="Delete"
-            circle
-          ></el-button>
-        </template>
-      </el-table-column>
-
-      <template #empty>
-        <el-empty description="暫時沒有數據" />
+  <div class="box">
+    <!-- PageContainer組件 卡片部分 -->
+    <PageContainer title="文章分類頁面" style="border-radius: 10px">
+      <!-- 使用具名插槽來渲染頂部 -->
+      <template #extra>
+        <!-- 右側按鈕部分 -->
+        <el-button type="primary" :icon="Plus" @click="addChannel"
+          >添加分類</el-button
+        >
       </template>
-    </el-table>
-    <!-- 封裝的彈層組件 -->
-    <ChannelEdit ref="editDom" @success="onSuccess"></ChannelEdit>
-  </PageContainer>
+
+      <!-- 中間內容部分 -->
+      <el-table
+        v-loading="isLoading"
+        :data="channelList"
+        style="width: 100%; height: 100%"
+      >
+        <!-- 內容部分 - 序列號 -->
+        <el-table-column align="center" type="index" label="序號" width="100" />
+        <!-- 內容部分 - 分類名稱 -->
+        <el-table-column align="center" prop="cate_name" label="分類名稱" />
+        <!-- 內容部分 - 分類別名 -->
+        <el-table-column align="center" prop="cate_alias" label="分類別名" />
+
+        <!-- 內容部分 - 按鈕區域 -->
+        <el-table-column align="center" label="操作" width="200">
+          <template #default="{ row, $index }">
+            <!-- 編輯按鈕部分 -->
+            <el-button
+              type="primary"
+              @click="isEdit(row, $index)"
+              :icon="Edit"
+              circle
+            ></el-button>
+            <!-- 刪除按鈕部分 -->
+            <el-button
+              type="danger"
+              @click="isDelete(row, $index)"
+              :icon="Delete"
+              circle
+            ></el-button>
+          </template>
+        </el-table-column>
+        <!-- 如果沒有數據時的提示文字 -->
+        <template #empty>
+          <el-empty description="暫時沒有文章分類數據" />
+        </template>
+      </el-table>
+
+      <!-- 封裝的彈層組件 -->
+      <ChannelEdit ref="editDom" @success="onSuccess"></ChannelEdit>
+    </PageContainer>
+  </div>
 </template>
 
 <style lang="scss" scoped></style>

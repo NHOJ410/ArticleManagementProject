@@ -20,7 +20,8 @@ import axios from 'axios'
 const visibleDrawer = ref(false) // 控制抽屜組件顯示隱藏的變量
 const imgURL = ref('') // 用來存儲上傳圖片的地址
 const vueQuill = ref(null) // 獲取富文本編輯器的DOM 使用裡面的 setHTML() 來重製輸入框
-const delayTime = 1000
+const delayTime = 1000 // 抽屜組件打開的延遲時間
+const formRef = ref(null) // 獲取form表單元素
 
 // 基礎表單數據
 const defaultFormData = {
@@ -44,6 +45,9 @@ const onUpload = (uploadFile) => {
 
 //  創建控制抽屜組件顯示的變量 , 並且傳入參數 row 等等要用這個來判斷 是添加還是編輯
 const openDrawer = async (row) => {
+  // 先清空殘留的驗證錯誤訊息
+  formRef.value?.clearValidate()
+
   visibleDrawer.value = true
   await nextTick() // 在開啟抽屜組件時 , 調用 nextTick() 等待DOM加載完成!
   // 解決 row 拿回來的數據不完全的問題 根據 row.id 做判斷
@@ -105,6 +109,9 @@ const emit = defineEmits(['success'])
 
 // 發布文章 , 草稿按鈕
 const onPublish = async (state) => {
+  // 發布前先進行表單驗證
+  await formRef.value?.validate()
+
   // 將我們需要的參數傳入進去 [ state 需要是中文 已發布/草稿 來辨別 ]
   formData.value.state = state
 
@@ -148,7 +155,7 @@ defineExpose({
       v-model="visibleDrawer"
       :title="formData.id ? '編輯文章' : '發布文章'"
       direction="rtl"
-      size="100%"
+      size="50%"
       class="drawer-body"
       :open-delay="delayTime"
     >
@@ -158,6 +165,7 @@ defineExpose({
         ref="formRef"
         label-width="100px"
         :rules="rules"
+        :hide-required-asterisk="true"
       >
         <!-- 文章標題區域 -->
         <el-form-item label="文章標題 : " prop="title">
@@ -211,11 +219,6 @@ defineExpose({
 </template>
 
 <style lang="scss" scoped>
-:deep(.drawer-body) {
-  // 抽屜組件樣式
-  background: linear-gradient(80deg, rgb(191, 228, 219), rgb(163, 241, 241));
-}
-
 :deep(.el-drawer__title) {
   font-size: 40px;
 }

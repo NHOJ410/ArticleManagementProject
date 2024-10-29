@@ -1,17 +1,19 @@
 <script setup>
 import { ref } from 'vue'
-import { Edit, Delete } from '@element-plus/icons-vue'
+import { Edit, Delete, Search, Refresh } from '@element-plus/icons-vue'
+// 導入router
+import { useRouter } from 'vue-router'
+const router = useRouter()
 // 引入組件
 import ChannelSelect from './components/ChannelSelect.vue'
 import ArticlelDrawer from './components/ArticlelDrawer.vue'
-import ArticleContent from '@/views/article/components/ArticleContent.vue'
 // 引入api
 import {
   artGetChannelManageService,
   artDelArticleContentService
 } from '@/api/article.js'
 // 引入插件
-import { formatDate } from '@/utils/formatDate'
+import { formatDate } from '@/utils/formatDate' // 導入日期插件
 
 const articleList = ref([]) // 文章列表數據
 const articleTotal = ref(0) // 文章總數量
@@ -21,7 +23,7 @@ const drawerDom = ref(null) // 獲取 ArticleDrawer組件的 DOM元素
 // 獲取文章列表參數
 const params = ref({
   pagenum: 1, // 當前分頁數
-  pagesize: 15, // 單頁面需要的數據數量
+  pagesize: 5, // 單頁面需要的數據數量
   cate_id: '', // 文章分類 id
   state: '' // 文章發布狀態 (參數是中文)
 })
@@ -89,12 +91,6 @@ const onDel = async (row) => {
   ElMessage.success('刪除文章成功!')
 }
 
-// 查看文章內容
-const content = ref(null)
-const showArticle = () => {
-  content.value.showArticle()
-}
-
 // 處理分頁邏輯
 // 切換單頁面顯示的數據數量
 const onSizeChange = (size) => {
@@ -109,6 +105,7 @@ const onSizeChange = (size) => {
 }
 
 // 監聽 抽屜組件回傳過來的事件 (添加/編輯按紐)
+
 const onAdd = (state) => {
   // 因為前面已經對添加按鈕傳遞參數 add 了 , 如果 state 為 add 說明是添加按鈕!
   if (state === 'add') {
@@ -123,110 +120,120 @@ const onAdd = (state) => {
   // 走到這裡 , 說明點擊的是編輯按紐 那就直接渲染當前頁面即可
   getArticleList()
 }
+
+// 點擊文章後跳轉到文章內容的事件處理函數
+const showArticle = (row) => {
+  // 跳轉到文章內容頁面
+  router.push(`/article/content/${row.id}`)
+}
 </script>
 
 <template>
-  <!-- PageContainer組件 卡片部分 -->
-  <PageContainer title="文章管理頁面" style="border-radius: 10px">
-    <template #extra>
-      <el-button type="primary" @click="addArticle">發布文章</el-button>
-    </template>
-
-    <!-- 上面文章分類和發布狀態下拉框 -->
-    <el-form inline>
-      <!-- 文章分類部分 -->
-      <el-form-item label="文章分類 : ">
-        <ChannelSelect v-model="params.cate_id"></ChannelSelect>
-      </el-form-item>
-
-      <!-- 發布狀態部分 -->
-      <el-form-item label="發布狀態 : ">
-        <el-select
-          placeholder="請確認發布狀態"
-          style="width: 150px"
-          v-model="params.state"
-        >
-          <el-option label="已發布" value="已发布"></el-option>
-          <el-option label="草稿" value="草稿"></el-option>
-        </el-select>
-      </el-form-item>
-      <!-- 搜索和重製按鈕部分 -->
-      <el-form-item>
-        <el-button type="primary" @click="onSearch">搜索</el-button>
-        <el-button @click="onReset">重製</el-button>
-      </el-form-item>
-    </el-form>
-
-    <!-- 中間內容部分 -->
-    <el-table
-      :data="articleList"
-      style="width: 100%"
-      max-height="100%"
-      v-loading="loading"
-    >
-      <el-table-column prop="title" label="文章標題">
-        <template #default="{ row }">
-          <el-link type="primary" :underline="false" @click="showArticle">{{
-            row.title
-          }}</el-link>
-        </template>
-      </el-table-column>
-      <el-table-column prop="cate_name" label="分類名稱"></el-table-column>
-      <el-table-column prop="pub_date" label="發布時間">
-        <template #default="{ row }">
-          {{ formatDate(row.pub_date) }}
-        </template>
-      </el-table-column>
-      <el-table-column prop="state" label="狀態"></el-table-column>
-      <el-table-column prop="" label="操作" width="140px">
-        <!-- 利用作用域插槽 row 可以獲取當前行的數據 ==> 相當於 v-for 裡面的 item -->
-        <template #default="{ row }">
-          <!--編輯按紐--->
-          <el-button
-            type="primary"
-            :icon="Edit"
-            circle
-            plain
-            @click="onEdit(row)"
-          />
-          <!--刪除按紐--->
-          <el-button
-            type="danger"
-            :icon="Delete"
-            circle
-            plain
-            @click="onDel(row)"
-          />
-        </template>
-      </el-table-column>
-
-      <!-- 空數據的處理 el-empty組件 -->
-      <template #empty>
-        <el-empty description="沒有找到相關的數據!" />
+  <div class="box">
+    <!-- PageContainer組件 卡片部分 -->
+    <PageContainer title="文章管理頁面" style="border-radius: 10px">
+      <template #extra>
+        <el-button type="primary" @click="addArticle">發布文章</el-button>
       </template>
-    </el-table>
-    <!-- 底部分頁部分 -->
-    <el-pagination
-      v-model:current-page="params.pagenum"
-      v-model:page-size="params.pagesize"
-      :page-sizes="[5, 10, 15, 20]"
-      :background="false"
-      layout="jumper , total, sizes, prev, pager, next, "
-      :total="articleTotal"
-      @size-change="onSizeChange"
-      @current-change="onCurrentChange"
-      style="margin-top: 20px; justify-content: flex-end"
-    />
 
-    <!-- 抽屜組件 -->
-    <ArticlelDrawer ref="drawerDom" @success="onAdd"></ArticlelDrawer>
-    <!-- 文章內容部分 -->
-    <ArticleContent ref="content"></ArticleContent>
-  </PageContainer>
+      <!-- 上面文章分類和發布狀態下拉框 -->
+      <el-form inline label-width="85px">
+        <!-- 文章分類部分 -->
+        <el-form-item label="文章分類 : ">
+          <ChannelSelect v-model="params.cate_id"></ChannelSelect>
+        </el-form-item>
+
+        <!-- 發布狀態部分 -->
+        <el-form-item label="發布狀態 : ">
+          <el-select
+            placeholder="請確認發布狀態"
+            style="width: 180px"
+            v-model="params.state"
+          >
+            <el-option label="已發布" value="已发布"></el-option>
+            <el-option label="草稿" value="草稿"></el-option>
+          </el-select>
+        </el-form-item>
+        <!-- 搜索和重製按鈕部分 -->
+        <el-form-item>
+          <el-button type="primary" :icon="Search" @click="onSearch"
+            >搜索</el-button
+          >
+          <el-button type="warning" :icon="Refresh" @click="onReset"
+            >重製</el-button
+          >
+        </el-form-item>
+      </el-form>
+
+      <!-- 中間內容部分 -->
+      <el-table
+        :data="articleList"
+        style="width: 100%"
+        max-height="100%"
+        v-loading="loading"
+      >
+        <el-table-column prop="title" label="文章標題">
+          <template #default="{ row }">
+            <el-link
+              type="primary"
+              :underline="false"
+              @click="showArticle(row)"
+              >{{ row.title }}</el-link
+            >
+          </template>
+        </el-table-column>
+        <el-table-column prop="cate_name" label="分類名稱"></el-table-column>
+        <el-table-column prop="pub_date" label="發布時間">
+          <template #default="{ row }">
+            {{ formatDate(row.pub_date) }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="state" label="狀態"></el-table-column>
+        <el-table-column prop="" label="操作" width="140px">
+          <!-- 利用作用域插槽 row 可以獲取當前行的數據 ==> 相當於 v-for 裡面的 item -->
+          <template #default="{ row }">
+            <!--編輯按紐--->
+            <el-button
+              type="primary"
+              :icon="Edit"
+              circle
+              plain
+              @click="onEdit(row)"
+            />
+            <!--刪除按紐--->
+            <el-button
+              type="danger"
+              :icon="Delete"
+              circle
+              plain
+              @click="onDel(row)"
+            />
+          </template>
+        </el-table-column>
+
+        <!-- 空數據的處理 el-empty組件 -->
+        <template #empty>
+          <el-empty description="沒有找到相關的數據!" />
+        </template>
+      </el-table>
+      <!-- 底部分頁部分 -->
+      <el-pagination
+        v-show="articleList.length !== 0"
+        v-model:current-page="params.pagenum"
+        v-model:page-size="params.pagesize"
+        :page-sizes="[5, 10, 15, 20]"
+        :background="false"
+        layout="jumper , prev, pager, next,  sizes , total "
+        :total="articleTotal"
+        @size-change="onSizeChange"
+        @current-change="onCurrentChange"
+        style="margin-top: 20px; justify-content: flex-end"
+      />
+
+      <!-- 抽屜組件 -->
+      <ArticlelDrawer ref="drawerDom" @success="onAdd"></ArticlelDrawer>
+    </PageContainer>
+  </div>
 </template>
 
-<style lang="scss" scoped>
-:deep(.drawer-body) {
-  background: linear-gradient(80deg, rgb(243, 247, 246), rgb(183, 241, 241));
-}
-</style>
+<style lang="scss" scoped></style>

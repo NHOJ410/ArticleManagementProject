@@ -53,7 +53,7 @@ const updateAvatar = async () => {
   await updateAvatarService(userAvatar.value)
 
   // 提示用戶更改頭像成功
-  ElMessage.success('更改頭像成功!')
+  ElMessage.success('更改頭像成功! 由於api問題所以要等一下下')
 
   // 調用user倉庫方法 重新獲取用戶個人訊息
   userStore.getUserInfo()

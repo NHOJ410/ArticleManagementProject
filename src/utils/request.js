@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { useUserStore } from '@/stores' //  導入 user倉庫
 import { ElMessage } from 'element-plus' // 導入 elementPlus 裡面的 消息提示
-const router = 'vue-router' // 導入 VueRouter
+const { useRouter } = 'vue-router' // 導入 VueRouter
 
 const baseURL = 'http://big-event-vue-api-t.itheima.net'
 
@@ -51,6 +51,8 @@ instance.interceptors.response.use(
     // 超出 2xx 範圍的狀態碼都會觸發該函數。對響應錯誤做點什麼
 
     // 響應狀態碼 401部分 , 權限不足 ex : token過期 => 需要攔截到登入頁面
+
+    const router = useRouter()
 
     if (error.response?.status === 401) {
       router.push('/login')

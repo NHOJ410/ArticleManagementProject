@@ -16,7 +16,11 @@ const router = createRouter({
         },
         {
           path: '/article/channel',
-          component: () => import('@/views/article/ArticleChannel.vue') // 二級路由 - 文章列表區域
+          component: () => import('@/views/article/ArticleChannel.vue') // 二級路由 - 文章分類區域
+        },
+        {
+          path: '/article/content/:id',
+          component: () => import('@/views/article/ArticleContent.vue') // 二級路由 - 文章內容區域
         },
         {
           path: '/user/profile',

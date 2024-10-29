@@ -28,7 +28,7 @@ const emit = defineEmits(['update:modelValue'])
   <!--  最後 將 v-model 拆分成 :modelValue 和 @update:modelValue 並且將對應的數據傳遞回去即可!($event) -->
   <el-select
     placeholder="請確認文章分類"
-    style="width: 150px"
+    style="width: 180px"
     :modelValue="modelValue"
     @update:modelValue="emit('update:modelValue', $event)"
   >

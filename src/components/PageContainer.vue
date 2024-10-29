@@ -4,6 +4,10 @@ defineProps({
   title: {
     require: true,
     type: String
+  },
+  fontSize: {
+    type: String,
+    default: '16px'
   }
 })
 </script>
@@ -12,7 +16,7 @@ defineProps({
   <el-card class="page-container">
     <template #header>
       <div class="card-header">
-        <span>{{ title }}</span>
+        <span :style="{ fontSize: fontSize }">{{ title }}</span>
         <div class="extra">
           <!-- 使用具名插槽來佔位 , 按鈕部分 -->
           <slot name="extra"></slot>
@@ -27,6 +31,7 @@ defineProps({
 <style lang="scss" scoped>
 .page-container {
   min-height: 100%;
+
   .card-header {
     display: flex;
     justify-content: space-between;

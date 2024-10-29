@@ -25,7 +25,9 @@ const passOldPwd = ref(false) // 控制舊密碼是否正確的變量
 const oldPwdValidate = (rule, value, callback) => {
   // 如果舊密碼輸入不正確 就拋出錯誤
   if (value !== userStore.userPassword) {
-    return callback(new Error('請確認舊密碼是否正確'))
+    return callback(
+      new Error('請確認舊密碼是否正確 , 只有舊密碼輸入正確才可以設定新密碼')
+    )
   }
 
   // 走到這裡代表舊密碼輸入正確

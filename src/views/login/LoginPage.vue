@@ -208,7 +208,14 @@ const rules = {
         <el-form-item class="flex">
           <div class="flex">
             <el-checkbox>記住我</el-checkbox>
-            <el-link type="primary" :underline="false">忘記密碼？</el-link>
+            <el-tooltip
+              class="box-item"
+              effect="dark"
+              content="沒有api😢"
+              placement="top-start"
+            >
+              <el-link type="primary" :underline="false">忘記密碼？</el-link>
+            </el-tooltip>
           </div>
         </el-form-item>
         <el-form-item>
