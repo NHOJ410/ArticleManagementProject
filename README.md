@@ -1,35 +1,25 @@
-# vue3Demo
+# 項目名稱 : 文章管理系統
 
-This template should help get you started developing with Vue 3 in Vite.
+# 前言 : 
 
-## Recommended IDE Setup
+項目存儲在 develop分支中
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+由於使用的是中國的後端接口 所以連線速度可能會有一點點慢 ( 白天還好 晚上可能會有數據出不來的情況）
 
-## Customize configuration
+由於此項目有註冊帳號的 api 所以可以先自行註冊帳號再進行登入
 
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+# 項目介紹 : 
 
-## Project Setup
+這是我學習Vue3的語法後 接觸的第一個項目 , 裡面包含了基礎的增刪改查 , 多次使用組件間的通信 , 也第一次使用了ElementPlus組件庫 , 作為練習還是蠻不錯的!
 
-```sh
-pnpm install
-```
+此項目使用到的技術棧為 : Vue3 + Pinia 
 
-### Compile and Hot-Reload for Development
+組件庫為 ElementPlus 
 
-```sh
-pnpm dev
-```
+預校驗有 : husky (提交前的二次驗證 ) ESLint ( 程式碼風格統一工具  )
 
-### Compile and Minify for Production
+其他的js庫有 : nprogress.js , wow.js 等等
 
-```sh
-pnpm build
-```
+# 心得 : 
 
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-pnpm lint
-```
+想說的有很多 但一句話總結就是：Vue3 和 Pinia 真的很方便🤣
