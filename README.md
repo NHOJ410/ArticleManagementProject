@@ -1,4 +1,9 @@
 # 項目名稱 : 文章管理系統
+![image](https://github.com/user-attachments/assets/b42278c2-97f9-46d7-83bd-1e9128138d7e)
+![image](https://github.com/user-attachments/assets/d07fc2e1-aca5-485e-a5d5-bc927e4cbb51)
+![image](https://github.com/user-attachments/assets/c49b5506-6b2e-4716-a20d-453a8345c796)
+![image](https://github.com/user-attachments/assets/c06cb8e9-5b24-4945-83a4-94c650f0bb29)
+
 
 # 前言 : 
 
@@ -18,7 +23,7 @@
 
 預校驗有 : husky (提交前的二次驗證 ) ESLint ( 程式碼風格統一工具  )
 
-其他的js庫有 : nprogress.js , wow.js 等等
+其他的js庫有 : nprogress.js , wow.js , VueQuill富文本編輯器 等等
 
 # 心得 : 
 
