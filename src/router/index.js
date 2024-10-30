@@ -1,5 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useUserStore } from '@/stores' // 導入 user倉庫
+// 導入進度條組件
+import NProgress from 'nprogress'
+import 'nprogress/nprogress.css'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -8,7 +11,7 @@ const router = createRouter({
     {
       path: '/',
       component: () => import('@/views/layout/LayoutContainer.vue'), // 一級路由 - 首頁(路由架子)
-      redirect: '/article/channel', // 如果訪問 / 路徑 , 直接重定向到 [文章管理頁面]
+      redirect: '/article/manage', // 如果訪問 / 路徑 , 直接重定向到 [文章管理頁面]
       children: [
         {
           path: '/article/manage',
@@ -41,6 +44,8 @@ const router = createRouter({
 
 // 配置全局前置導航守衛
 router.beforeEach((to) => {
+  // 打開進度條
+  NProgress.start()
   //  如果Pinia裡面沒有token的話 , 就要攔截 並且強制跳轉到 /login 登入頁面
   const userStore = useUserStore() //  建立user倉庫變量
   if (!userStore.token && to.path !== '/login') {
@@ -60,6 +65,12 @@ router.beforeEach((to) => {
   }
 
   return
+})
+
+// 配置全局後置導航守衛
+router.afterEach(() => {
+  // 關閉進度條
+  NProgress.done()
 })
 
 export default router

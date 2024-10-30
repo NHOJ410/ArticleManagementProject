@@ -120,7 +120,8 @@ const goUserInfo = () => {
         <el-header>
           <!-- 左側用戶名 -->
           <div class="username">
-            用戶：<strong>{{
+            歡迎回來
+            <strong>{{
               useStore.userInfo.nickname || useStore.userInfo.username
             }}</strong>
           </div>

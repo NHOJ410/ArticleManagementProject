@@ -1,5 +1,5 @@
-import { defineStore } from 'pinia' // 導入 Pinia
 import { ref } from 'vue'
+import { defineStore } from 'pinia' // 導入 Pinia
 import { userGetInfoService } from '@/api/user'
 
 export const useUserStore = defineStore(

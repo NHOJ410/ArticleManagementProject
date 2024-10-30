@@ -118,7 +118,7 @@ const rules = {
   ]
 }
 
-// 選擇記住帳號密碼的回顯部分 ( 沒有api 算是即興創作 )
+// -------------- 選擇記住帳號密碼的回顯部分 ( 沒有api 算是即興創作 ) --------------------------
 
 onMounted(() => {
   if (isRegister.value === false && userStore.isRemember) {
@@ -136,12 +136,13 @@ const goLogin = () => {
   // 重新賦值數據
   setTimeout(() => {
     if (userStore.isRemember) {
+      userStore.rememberAction(userStore.isRemember)
       formModel.value = {
         username: userStore.rememberInfo.username,
         password: userStore.rememberInfo.password
       }
     }
-  }, 100)
+  }, 500)
 }
 </script>
 

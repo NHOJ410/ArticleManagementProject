@@ -93,6 +93,7 @@ const onReset = async () => {
       </el-form-item>
       <!-- 輸入框部分 -->
       <div class="input">
+        <!-- 帳號輸入框 -->
         <el-form-item label="帳號 : ">
           <el-input
             v-model="userForm.username"
@@ -100,9 +101,11 @@ const onReset = async () => {
             style="width: 15vw"
           ></el-input>
         </el-form-item>
+        <!-- 密碼輸入框 -->
         <el-form-item label="暱稱 : " prop="nickname">
           <el-input v-model="userForm.nickname" style="width: 15vw"></el-input>
         </el-form-item>
+        <!-- 信箱輸入框 -->
         <el-form-item label="信箱 : " prop="email">
           <el-input v-model="userForm.email" style="width: 15vw"></el-input>
         </el-form-item>

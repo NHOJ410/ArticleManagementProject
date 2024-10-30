@@ -64,7 +64,7 @@ const updateAvatar = async () => {
 </script>
 
 <template>
-  <PageContainer title="更換用戶頭像">
+  <PageContainer title="更換頭像">
     <el-row>
       <el-col :span="8">
         <el-upload

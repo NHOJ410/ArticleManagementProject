@@ -156,7 +156,7 @@ const updatePwd = async () => {
               >確認更改</el-button
             >
             <el-button type="warning" :icon="Refresh" @click="resetForm"
-              >reset數據</el-button
+              >重製表單</el-button
             >
           </el-form-item>
         </el-form>
