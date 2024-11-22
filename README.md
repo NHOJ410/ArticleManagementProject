@@ -1,6 +1,8 @@
 # 項目名稱 : 文章管理系統
 ### 路由設計
 ![image](https://github.com/user-attachments/assets/88fd9511-fc7f-4428-b629-8523cfc53879)
+### 組件整理
+![image](https://github.com/user-attachments/assets/1c70a7a8-95a4-4574-87e2-3232dac40c27)
 ### 登入頁面
 ![image](https://github.com/user-attachments/assets/b42278c2-97f9-46d7-83bd-1e9128138d7e)
 ### 文章管理頁面
