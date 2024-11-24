@@ -9,7 +9,7 @@ import {
   CaretBottom,
   Refresh
 } from '@element-plus/icons-vue'
-import avatar from '@/assets/default.png'
+import avatar from '@/assets/defaultAvatar.png'
 import { useRouter } from 'vue-router'
 const router = useRouter()
 import { useUserStore } from '@/stores' // 導入 user倉庫
@@ -194,7 +194,7 @@ const goUserInfo = () => {
 
       &__logo {
         height: 120px;
-        background: url('@/assets/1.jpg') no-repeat center / 100% auto;
+        background: url('@/assets/manuImg.jpg') no-repeat center / 100% auto;
       }
 
       :deep(.el-menu) {

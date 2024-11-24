@@ -291,7 +291,7 @@ const goLogin = () => {
 
     // 左側背景圖
     .bg {
-      background: url('@/assets/bg3.webp') no-repeat center / cover;
+      background: url('@/assets/LoginBgi.webp') no-repeat center / cover;
       border-radius: 0 20px 20px 0;
     }
 
