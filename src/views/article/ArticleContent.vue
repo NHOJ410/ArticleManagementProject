@@ -105,8 +105,9 @@ const jumpToAuthor = async () => {
 <style lang="scss" scoped>
 .box {
   .common-layout {
-    height: calc(80vh - $top-height - $footer-height);
+    height: 100%;
     position: relative;
+    overflow-y: auto;
 
     // 文章圖片部分
     .articleImg {
