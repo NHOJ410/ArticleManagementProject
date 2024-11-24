@@ -6,7 +6,7 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 // 引入組件
 import ChannelSelect from './components/ChannelSelect.vue'
-import ArticlelDrawer from './components/ArticlelDrawer.vue'
+import ArticlelDrawer from './components/ArticleDrawer.vue'
 // 引入api
 import {
   artGetChannelManageService,
@@ -105,11 +105,10 @@ const onSizeChange = (size) => {
 }
 
 // 監聽 抽屜組件回傳過來的事件 (添加/編輯按紐)
-
 const onAdd = (state) => {
   // 因為前面已經對添加按鈕傳遞參數 add 了 , 如果 state 為 add 說明是添加按鈕!
   if (state === 'add') {
-    // 因為是渲染按鈕 , 所以要跳轉到最後一頁 (案例需求)
+    // 因為是渲染按鈕 , 所以要跳轉到最後一頁 (案例需求) 「這裡+1是為了確保是在添加文章後的結果」
     const lastPage = Math.ceil((articleTotal.value + 1) / params.value.pagesize)
     // 將拿到的最後一頁去更新 請求的 當前分頁數
     params.value.pagenum = lastPage
@@ -131,7 +130,7 @@ const showArticle = (row) => {
 <template>
   <div class="box">
     <!-- PageContainer組件 卡片部分 -->
-    <PageContainer title="文章管理頁面" style="border-radius: 10px">
+    <PageContainer title="文章管理頁面">
       <template #extra>
         <el-button type="primary" @click="addArticle">發布文章</el-button>
       </template>
@@ -172,7 +171,8 @@ const showArticle = (row) => {
         max-height="100%"
         v-loading="loading"
       >
-        <el-table-column prop="title" label="文章標題">
+        <el-table-column prop="title" label="文章標題" align="center">
+          <!-- 文章超連結 -->
           <template #default="{ row }">
             <el-link
               type="primary"
@@ -182,14 +182,22 @@ const showArticle = (row) => {
             >
           </template>
         </el-table-column>
-        <el-table-column prop="cate_name" label="分類名稱"></el-table-column>
-        <el-table-column prop="pub_date" label="發布時間">
+        <el-table-column
+          prop="cate_name"
+          label="分類名稱"
+          align="center"
+        ></el-table-column>
+        <el-table-column prop="pub_date" label="發布時間" align="center">
           <template #default="{ row }">
             {{ formatDate(row.pub_date) }}
           </template>
         </el-table-column>
-        <el-table-column prop="state" label="狀態"></el-table-column>
-        <el-table-column prop="" label="操作" width="140px">
+        <el-table-column
+          prop="state"
+          label="狀態"
+          align="center"
+        ></el-table-column>
+        <el-table-column prop="" label="操作" width="140px" align="center">
           <!-- 利用作用域插槽 row 可以獲取當前行的數據 ==> 相當於 v-for 裡面的 item -->
           <template #default="{ row }">
             <!--編輯按紐--->
@@ -213,7 +221,7 @@ const showArticle = (row) => {
 
         <!-- 空數據的處理 el-empty組件 -->
         <template #empty>
-          <el-empty description="沒有找到相關的數據!" />
+          <el-empty description="目前沒有文章!" />
         </template>
       </el-table>
       <!-- 底部分頁部分 -->

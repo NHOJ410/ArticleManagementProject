@@ -2,7 +2,7 @@
 import { User, Lock } from '@element-plus/icons-vue'
 import { ref, watch, onMounted } from 'vue'
 import { userRegisterService, userLoginService } from '@/api/user' //  導入驗證請求
-import { useUserStore } from '@/stores' // 導入 user倉庫
+import { useUserStore } from '@/stores' // 導入 倉庫
 import { useRouter } from 'vue-router' // 導入 useRouter方法
 import wowJS from '@/utils/wow.js' // 導入wow.js
 
@@ -166,7 +166,7 @@ const goLogin = () => {
           @keyup.enter="register"
         >
           <el-form-item>
-            <h1>文章管理系統 - 歡迎註冊</h1>
+            <h1>文章管理系統 歡迎註冊</h1>
           </el-form-item>
           <el-form-item prop="username">
             <el-input
@@ -222,7 +222,7 @@ const goLogin = () => {
           @keyup.enter="login"
         >
           <el-form-item>
-            <h1>文章管理系統 - 歡迎登入</h1>
+            <h1>文章管理系統 歡迎登入</h1>
           </el-form-item>
           <!-- 用戶名輸入區 -->
           <el-form-item prop="username">

@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { useUserStore } from '@/stores' //  導入 user倉庫
 import { ElMessage } from 'element-plus' // 導入 elementPlus 裡面的 消息提示
-const { useRouter } = 'vue-router' // 導入 VueRouter
+import router from '@/router' // 導入 VueRouter
 
 const baseURL = 'http://big-event-vue-api-t.itheima.net'
 
@@ -17,10 +17,10 @@ instance.interceptors.request.use(
   function (config) {
     // 在發送請求之前做些什麼
 
-    const userStore = useUserStore() // 2. 註冊 userStore變量
+    const userStore = useUserStore() //  註冊 userStore變量
 
     if (userStore.token) {
-      config.headers.Authorization = userStore.token // 3. 如果 user倉庫裡面存有token 的話 , 就把 token 加入到 headers請求參數中
+      config.headers.Authorization = userStore.token //  如果 user倉庫裡面存有token 的話 , 就把 token 加入到 headers請求參數中
     }
 
     return config
@@ -51,16 +51,20 @@ instance.interceptors.response.use(
     // 超出 2xx 範圍的狀態碼都會觸發該函數。對響應錯誤做點什麼
 
     // 響應狀態碼 401部分 , 權限不足 ex : token過期 => 需要攔截到登入頁面
-
-    const router = useRouter()
-
     if (error.response?.status === 401) {
-      router.push('/login')
+      ElMessage.error({
+        message: '您好像沒有登入 三秒後跳轉到登入頁面 請先登入帳號',
+        type: 'error'
+      })
+
+      setTimeout(() => {
+        router.push('/login')
+      }, 3000)
     }
 
     // 默認錯誤部分 , 提取消息讓 elementPlus提示框做提示
     ElMessage.error({
-      message: error.data.message || '服務器異常!',
+      message: error.data?.message || '服務器異常!',
       type: 'error'
     })
     return Promise.reject(error)

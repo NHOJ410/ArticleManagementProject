@@ -56,7 +56,7 @@ const emit = defineEmits(['success']) // 2.  定義一個 子傳父的方法 suc
 
 // 確認框的事件處理函數
 const onSubmit = async () => {
-  // 調用 el-form 所提供的 validate( ) 方法 , 進行二次較驗
+  // 調用 el-form 所提供的 validate() 方法 , 進行二次較驗
   await formRef.value.validate()
 
   //  先定義 id  來判斷點擊的是 編輯按紐還是添加按鈕
@@ -71,8 +71,8 @@ const onSubmit = async () => {
     ElMessage.success('添加成功!')
   }
 
-  dialogVisible.value = false // 1. 關閉彈層框
-  emit('success') // 3. 調用子傳父方法 success 通知父組件需要更新數據了!
+  dialogVisible.value = false //  關閉彈層框
+  emit('success') //  調用子傳父方法 success 通知父組件需要更新數據了!
 }
 
 //  上面完成後要對外爆露方法 ( defineExpose 宏 )

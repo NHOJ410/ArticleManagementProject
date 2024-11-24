@@ -23,6 +23,8 @@ const passOldPwd = ref(false) // 控制舊密碼是否正確的變量
 
 // 舊密碼的自定義驗證規則
 const oldPwdValidate = (rule, value, callback) => {
+  passOldPwd.value = false // 重置密碼驗證狀態
+
   // 如果舊密碼輸入不正確 就拋出錯誤
   if (value !== userStore.userPassword) {
     return callback(
@@ -41,6 +43,7 @@ const oldPwdValidate = (rule, value, callback) => {
 const confirmPwdValidate = (rule, value, callback) => {
   // 如果二次驗證輸入的密碼不正確 就拋出錯誤
   if (value !== userParams.value.new_pwd) {
+    passOldPwd.value = false // 錯誤情況下設為 false
     return callback(new Error('請確認二次密碼是否一致'))
   }
 
@@ -74,6 +77,7 @@ const formRef = ref(null) // 獲取表單元素
 
 // 重製按鈕部分
 const resetForm = () => {
+  passOldPwd.value = false // 重置密碼驗證狀態
   // 調用elementPlus提供的方法 重製表單
   formRef.value.resetFields()
 }

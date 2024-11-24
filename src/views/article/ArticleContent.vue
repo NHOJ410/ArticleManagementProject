@@ -12,6 +12,8 @@ const isLoading = ref(false) // 控制 loading效果的變量
 
 const articleContent = ref([]) // 存儲獲取到的文章數據
 
+const imgUrl = ref('') // 存儲文章封面的地址
+
 // 獲取文章詳情數據
 const getArticleContent = async () => {
   isLoading.value = true
@@ -19,6 +21,9 @@ const getArticleContent = async () => {
   const res = await artGetArticleContentService(route.params.id)
 
   articleContent.value = res.data.data
+
+  // 拼接文章封面的地址 , 做渲染用 防止 undefined 出現的問題
+  imgUrl.value = `${baseURL}${articleContent.value.cover_img}`
 
   isLoading.value = false
 }
@@ -44,8 +49,7 @@ const jumpToAuthor = async () => {
 <template>
   <div class="box" v-loading="isLoading">
     <PageContainer
-      :title="`文章分類 → ${articleContent.cate_name}`"
-      :fontSize="'26px'"
+      :title="`${articleContent.cate_name || '正在加載...'} `"
       style="border-radius: 10px"
     >
       <article class="common-layout">
@@ -53,14 +57,14 @@ const jumpToAuthor = async () => {
           <!-- 左側文章圖片 -->
           <el-aside width="200px">
             <div class="articleImg">
-              <img :src="`${baseURL}${articleContent.cover_img}`" />
+              <img :src="imgUrl" />
             </div>
           </el-aside>
           <el-container>
             <!-- 文章標題部分 -->
             <el-header>
               <div class="articleTitle">
-                <h2>文章標題 – {{ articleContent.title }}</h2>
+                <h2>{{ articleContent.title }}</h2>
                 <div class="authorItem">
                   <span>作者</span>
                   <el-tooltip
@@ -70,7 +74,7 @@ const jumpToAuthor = async () => {
                     placement="top-end"
                   >
                     <p @click="jumpToAuthor" class="author">
-                      @{{ articleContent.nickname }}
+                      @{{ articleContent.nickname || articleContent.username }}
                     </p>
                   </el-tooltip>
                 </div>
@@ -78,10 +82,18 @@ const jumpToAuthor = async () => {
             </el-header>
 
             <!-- 文章內容部分 -->
-            <el-main>
+            <el-main class="main-content">
               <div class="articleCotent">
                 <p v-html="articleContent.content"></p>
               </div>
+              <!-- 回到上一頁按鈕 -->
+              <el-button
+                type="primary"
+                size="large"
+                class="goBackBtn"
+                @click="router.back()"
+                >點我回到文章管理頁面</el-button
+              >
             </el-main>
           </el-container>
         </el-container>
@@ -93,7 +105,8 @@ const jumpToAuthor = async () => {
 <style lang="scss" scoped>
 .box {
   .common-layout {
-    height: calc(75vh - $top-height);
+    height: calc(80vh - $top-height - $footer-height);
+    position: relative;
 
     // 文章圖片部分
     .articleImg {
@@ -105,7 +118,7 @@ const jumpToAuthor = async () => {
       img {
         width: 100%;
         height: 100%;
-        object-fit: fit;
+        object-fit: cover;
         border-radius: 50%;
       }
     }
@@ -148,9 +161,18 @@ const jumpToAuthor = async () => {
     }
 
     // 文章內容部分
-    .articleCotent {
-      font-size: 20px;
-      font-weight: 600;
+    .main-content {
+      .articleCotent {
+        font-size: 20px;
+        font-weight: 600;
+      }
+
+      // 回到上一頁按鈕
+      .goBackBtn {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+      }
     }
   }
 }

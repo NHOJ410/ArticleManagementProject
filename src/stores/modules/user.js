@@ -1,11 +1,11 @@
 import { ref } from 'vue'
-import { defineStore } from 'pinia' // 導入 Pinia
+import { defineStore } from 'pinia'
 import { userGetInfoService } from '@/api/user'
 
 export const useUserStore = defineStore(
   'user',
   () => {
-    // ------------ 用戶token 部分 --------------
+    // -------------------------- 用戶token 部分 ----------------------------
     //  存放用戶 token
     const token = ref('')
 
@@ -19,7 +19,7 @@ export const useUserStore = defineStore(
       token.value = ''
     }
 
-    // --------------  獲取用戶個人訊息部分 ---------------
+    // ------------------------  獲取用戶個人訊息部分 --------------------------
 
     const userInfo = ref({}) // 存儲用戶個人訊息
 
@@ -34,7 +34,8 @@ export const useUserStore = defineStore(
       userInfo.value = obj
     }
 
-    // ------------- 用戶密碼部分 --------------
+    // -------------------------- 用戶密碼部分 ----------------------------
+
     const userPassword = ref(null) // 存儲用戶密碼 ( 這裡是做修改密碼的效果的 )
 
     // 用來設定用戶密碼的 action
@@ -72,17 +73,16 @@ export const useUserStore = defineStore(
     }
 
     return {
-      //  最後別忘記要 return 出去!
       token,
-      setToken,
-      removeToken,
       userInfo,
-      getUserInfo,
-      setUserInfo,
       userPassword,
-      setPassword,
       rememberInfo,
       isRemember,
+      setToken,
+      removeToken,
+      getUserInfo,
+      setUserInfo,
+      setPassword,
       rememberAction
     }
   },

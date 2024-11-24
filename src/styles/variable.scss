@@ -1,5 +1,15 @@
 // 頂部用戶名和頭像部分
 $top-height: 60px;
+$footer-height: 5vh;
 
 // 菜單顏色
 $menu-color: #171717;
+
+
+/* 路由跳轉過度動畫 */
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.5s;
+}
+.fade-enter-from, .fade-leave-to {
+  opacity: 0;
+}

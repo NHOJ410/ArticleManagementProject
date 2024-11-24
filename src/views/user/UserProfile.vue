@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue'
+import defaultAvatar from '@/assets/default.png'
 // 導入倉庫
 import { useUserStore } from '@/stores'
 // 導入api
@@ -88,7 +89,11 @@ const onReset = async () => {
       <!-- 頭像部分 -->
       <el-form-item>
         <div class="avatar">
-          <el-avatar :shape="'square'" :src="userForm.user_pic"></el-avatar>
+          <el-avatar
+            :shape="'square'"
+            :src="userForm.user_pic || defaultAvatar"
+          ></el-avatar>
+          <p class="prompt" v-show="!userForm.user_pic">用戶目前沒有設定頭像</p>
         </div>
       </el-form-item>
       <!-- 輸入框部分 -->
@@ -125,9 +130,16 @@ const onReset = async () => {
 .user-profile {
   // 頭像部分
   .avatar {
-    width: 100px;
-    height: 100px;
-    margin-bottom: 50px;
+    position: relative;
+
+    .prompt {
+      position: absolute;
+      font-size: 12px;
+      bottom: 10px;
+      left: 15px;
+      color: white;
+      user-select: none;
+    }
 
     .el-avatar {
       width: 150px;

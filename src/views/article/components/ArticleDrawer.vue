@@ -121,6 +121,7 @@ const onPublish = async (state) => {
   for (let key in formData.value) {
     fd.append(key, formData.value[key]) //  利用 FormData提供的 append方法 , 將我們表單數據的值 , 加入到我們創建的 FormData對象裡面
   }
+
   //  發請求前 判斷是編輯操作還是添加操作
   //  有 id 說明是編輯操作 ,
   if (formData.value.id) {
@@ -155,7 +156,7 @@ defineExpose({
       v-model="visibleDrawer"
       :title="formData.id ? '編輯文章' : '發布文章'"
       direction="rtl"
-      size="50%"
+      size="45%"
       class="drawer-body"
       :open-delay="delayTime"
     >
@@ -219,8 +220,10 @@ defineExpose({
 </template>
 
 <style lang="scss" scoped>
+// 頂部標題部分
 :deep(.el-drawer__title) {
   font-size: 40px;
+  font-style: italic;
 }
 
 /* 上傳圖片部分 */

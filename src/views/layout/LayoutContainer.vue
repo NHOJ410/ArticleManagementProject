@@ -4,10 +4,10 @@ import {
   Promotion,
   UserFilled,
   User,
-  Crop,
   EditPen,
   SwitchButton,
-  CaretBottom
+  CaretBottom,
+  Refresh
 } from '@element-plus/icons-vue'
 import avatar from '@/assets/default.png'
 import { useRouter } from 'vue-router'
@@ -18,6 +18,7 @@ useStore.getUserInfo() // 調用 Pinia 倉庫中  請求用戶基本訊息的函
 
 // 登出按鈕事件處理函數
 const handleCommand = async (key) => {
+  // 如果用戶點擊「退出登入」，繼續執行以下操作
   if (key === 'logout') {
     try {
       // 顯示確認對話框
@@ -27,7 +28,6 @@ const handleCommand = async (key) => {
         cancelButtonText: '取消'
       })
 
-      // 如果用戶點擊「退出登入」，繼續執行以下操作
       useStore.removeToken() // 清空用戶token
       useStore.setUserInfo({}) // 清空用戶訊息
       router.push('/login') // 跳轉到登入頁面
@@ -93,7 +93,7 @@ const goUserInfo = () => {
             <!-- 個人中心 - 更換頭像 -->
             <el-menu-item index="/user/avatar">
               <el-icon>
-                <Crop />
+                <Refresh />
               </el-icon>
               <span>更換頭像</span>
             </el-menu-item>
@@ -132,7 +132,7 @@ const goUserInfo = () => {
               <!-- 頭像 -->
               <el-avatar
                 @click="goUserInfo"
-                :fit="'contain'"
+                :fit="'cover'"
                 :size="'large'"
                 :src="useStore.userInfo.user_pic || avatar"
               />
@@ -147,7 +147,7 @@ const goUserInfo = () => {
                 <el-dropdown-item command="profile" :icon="User"
                   >基本資料</el-dropdown-item
                 >
-                <el-dropdown-item command="avatar" :icon="Crop"
+                <el-dropdown-item command="avatar" :icon="Refresh"
                   >更換頭像</el-dropdown-item
                 >
                 <el-dropdown-item command="password" :icon="EditPen"
@@ -163,11 +163,20 @@ const goUserInfo = () => {
 
         <!-- 內容區(二級路由出口) -->
         <el-main>
-          <router-view></router-view>
+          <router-view v-slot="{ Component, route }">
+            <transition name="fade" mode="out-in">
+              <component :is="Component" :key="route.path" />
+            </transition>
+          </router-view>
         </el-main>
 
         <!-- 底部介紹區域 -->
-        <el-footer>文章管理項目 ©2024 Created by John</el-footer>
+        <el-footer
+          >文章管理項目 ©2024 Created by
+          {{
+            useStore.userInfo.nickname || useStore.userInfo.username
+          }}</el-footer
+        >
       </el-container>
     </el-container>
   </div>
@@ -235,6 +244,7 @@ const goUserInfo = () => {
       color: #666;
       letter-spacing: 8px;
       user-select: none;
+      $footer-height: 5vh;
     }
   }
 }

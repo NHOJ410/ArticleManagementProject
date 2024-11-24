@@ -4,8 +4,7 @@ import { Delete, Edit, Plus } from '@element-plus/icons-vue'
 // 導入api
 import { artGetChannelService, artDelChannelService } from '@/api/article'
 // 導入組件
-import ChannelEdit from '@/views/article/components/channelEdit.vue' // 導入 channelEdit 局部組件
-
+import ChannelEdit from '@/views/article/components/ChannelEdit.vue' // 導入 channelEdit 局部組件
 const channelList = ref([]) //  存儲文章分類列表
 const isLoading = ref(false) // 控制 v-loading 效果的變量
 const editDom = ref(null) // 獲取channelEdit的組件實例
@@ -59,7 +58,7 @@ const onSuccess = () => {
 <template>
   <div class="box">
     <!-- PageContainer組件 卡片部分 -->
-    <PageContainer title="文章分類頁面" style="border-radius: 10px">
+    <PageContainer title="文章分類頁面">
       <!-- 使用具名插槽來渲染頂部 -->
       <template #extra>
         <!-- 右側按鈕部分 -->
@@ -83,18 +82,18 @@ const onSuccess = () => {
 
         <!-- 內容部分 - 按鈕區域 -->
         <el-table-column align="center" label="操作" width="200">
-          <template #default="{ row, $index }">
+          <template #default="{ row }">
             <!-- 編輯按鈕部分 -->
             <el-button
               type="primary"
-              @click="isEdit(row, $index)"
+              @click="isEdit(row)"
               :icon="Edit"
               circle
             ></el-button>
             <!-- 刪除按鈕部分 -->
             <el-button
               type="danger"
-              @click="isDelete(row, $index)"
+              @click="isDelete(row)"
               :icon="Delete"
               circle
             ></el-button>

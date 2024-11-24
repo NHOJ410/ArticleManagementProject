@@ -11,7 +11,7 @@ const router = createRouter({
     {
       path: '/',
       component: () => import('@/views/layout/LayoutContainer.vue'), // 一級路由 - 首頁(路由架子)
-      redirect: '/article/manage', // 如果訪問 / 路徑 , 直接重定向到 [文章管理頁面]
+      redirect: '/article/channel', // 如果訪問 / 路徑 , 直接重定向到 [文章分類頁面]
       children: [
         {
           path: '/article/manage',
@@ -23,6 +23,7 @@ const router = createRouter({
         },
         {
           path: '/article/content/:id',
+          name: '文章內容',
           component: () => import('@/views/article/ArticleContent.vue') // 二級路由 - 文章內容區域
         },
         {
@@ -36,6 +37,10 @@ const router = createRouter({
         {
           path: '/user/password',
           component: () => import('@/views/user/UserPassword.vue') // 二級路由 - 重製密碼區域
+        },
+        {
+          path: '/:pathMatch(.*)*',
+          redirect: '/article/channel' // 如果未匹配到任何路由 , 就重定向到 [文章分類頁面]
         }
       ]
     }
@@ -59,8 +64,7 @@ router.beforeEach((to) => {
       offset: 64
     })
 
-    //  跳轉到登入頁面 , 按照影片解釋 直接用 return 跳轉即可!
-
+    //  跳轉到登入頁面 , 按照影片解釋 直接用 return 跳轉即可! 不用像之前用 next()
     return './login'
   }
 

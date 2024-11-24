@@ -1,41 +1,58 @@
 <script setup>
+import { useRoute } from 'vue-router'
+const route = useRoute()
+
 // 利用 defineProps 接收父組件傳遞過來的 title名字
 defineProps({
   title: {
-    require: true,
-    type: String
-  },
-  fontSize: {
     type: String,
-    default: '16px'
+    default: '正在加載...'
   }
 })
 </script>
 
 <template>
-  <el-card class="page-container">
-    <template #header>
-      <div class="card-header">
-        <span :style="{ fontSize: fontSize }">{{ title }}</span>
-        <div class="extra">
-          <!-- 使用具名插槽來佔位 , 按鈕部分 -->
-          <slot name="extra"></slot>
+  <div class="box">
+    <el-card class="page-container">
+      <template #header>
+        <!-- 頂部標題 -->
+        <div class="card-header">
+          <!-- 麵包屑導航部分 -->
+          <el-breadcrumb separator="/" class="title">
+            <el-breadcrumb-item
+              v-if="route.matched[1]?.name === '文章內容'"
+              :to="{ path: '/article/manage' }"
+              >文章管理</el-breadcrumb-item
+            >
+            <el-breadcrumb-item>{{ title }}</el-breadcrumb-item>
+          </el-breadcrumb>
+          <div class="extra">
+            <!-- 使用具名插槽來佔位 , 按鈕部分 -->
+            <slot name="extra"></slot>
+          </div>
         </div>
-      </div>
-    </template>
-    <!-- 使用默認插槽來佔位 , 內容部分 -->
-    <slot></slot>
-  </el-card>
+      </template>
+      <!-- 使用默認插槽來佔位 , 內容部分 -->
+      <slot></slot>
+    </el-card>
+  </div>
 </template>
 
 <style lang="scss" scoped>
-.page-container {
-  min-height: 100%;
+.box {
+  .page-container {
+    min-height: 100%;
+    border-radius: 10px;
 
-  .card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .title {
+      font-size: 20px;
+    }
   }
 }
 </style>
