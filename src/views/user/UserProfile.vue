@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-import defaultAvatar from '@/assets/default.png'
+import defaultAvatar from '@/assets/defaultAvatar.png'
 // 導入倉庫
 import { useUserStore } from '@/stores'
 // 導入api
