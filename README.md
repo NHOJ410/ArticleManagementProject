@@ -1,6 +1,6 @@
 # 項目名稱 : 文章管理系統
 
-線上地址 : https://stately-chebakia-4f7849.netlify.app/
+線上地址 ( 如果服務器錯誤代表街口崩潰了 = = ) : https://stately-chebakia-4f7849.netlify.app/
 
 因為使用的是中國的後端接口 所以連線速度可能會有一點點慢 ( 白天還好 晚上可能會有數據出不來的情況）
 
