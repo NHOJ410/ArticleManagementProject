@@ -6,6 +6,10 @@
 
 由於此項目有註冊帳號的 api 所以可以先自行註冊帳號再進行登入
 
+或者可以用已有帳號 
+
+帳號 : John4105 密碼 : 987654321
+
 ### 路由設計
 ![image](https://github.com/user-attachments/assets/88fd9511-fc7f-4428-b629-8523cfc53879)
 ### 組件整理
