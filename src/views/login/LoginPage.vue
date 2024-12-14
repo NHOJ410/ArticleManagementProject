@@ -17,25 +17,33 @@ const router = useRouter() // 定義 router
 
 const isRegister = ref(false) // 切換登入與註冊頁面的變量
 
+const isLoading = ref(false) // 控制按鈕防抖變量
+
 // 註冊按鈕預先校驗
 
 //  獲取 form 表單元素
-
-const form = ref()
+const form = ref(null)
 
 // 註冊按鈕 事件處理函數
 
 const register = async () => {
   await form.value.validate()
-  //  調用 驗證註冊帳號密碼請求
-  await userRegisterService(formModel.value)
-  //  調用 Message組件
-  ElMessage({
-    message: '註冊成功!',
-    type: 'success',
-    duration: 3000,
-    offset: 64
-  })
+  try {
+    isLoading.value = true // 開啟按鈕防抖
+    //  調用 驗證註冊帳號密碼請求
+    await userRegisterService(formModel.value)
+    //  調用 Message組件
+    ElMessage({
+      message: '註冊成功!',
+      type: 'success',
+      duration: 3000,
+      offset: 64
+    })
+  } catch (error) {
+    return console.error(error)
+  } finally {
+    isLoading.value = false // 關閉按鈕防抖
+  }
 
   //  切換到登入頁面
   isRegister.value = false
@@ -45,24 +53,32 @@ const register = async () => {
 
 const login = async () => {
   await form.value.validate()
-  const {
-    data: { token }
-  } = await userLoginService(formModel.value)
 
-  // 登入成功後 , 調用 user倉庫裡面的 setUserToken 方法 , 將 token 存入進 state 裡面
-  userStore.setToken(token)
-  //  調用 Message組件
-  ElMessage({
-    message: '登入成功!',
-    type: 'success',
-    duration: 3000,
-    offset: 64
-  })
+  try {
+    isLoading.value = true // 開啟按鈕防抖
+    const {
+      data: { token }
+    } = await userLoginService(formModel.value)
 
-  // 將密碼存到Pinia倉庫中 , 更改密碼需要用到
-  userStore.setPassword(formModel.value.password)
+    // 登入成功後 , 調用 user倉庫裡面的 setUserToken 方法 , 將 token 存入進 state 裡面
+    userStore.setToken(token)
+    //  調用 Message組件
+    ElMessage({
+      message: '登入成功!',
+      type: 'success',
+      duration: 3000,
+      offset: 64
+    })
 
-  userStore.rememberAction(userStore.isRemember)
+    // 將密碼存到Pinia倉庫中 , 更改密碼需要用到
+    userStore.setPassword(formModel.value.password)
+
+    userStore.rememberAction(userStore.isRemember)
+  } catch (error) {
+    console.error(error)
+  } finally {
+    isLoading.value = false
+  }
 
   // 跳轉到首頁
   router.push('/')
@@ -150,134 +166,140 @@ const goLogin = () => {
   <div class="box">
     <el-row class="login-page">
       <!-- 左側圖片 -->
-      <el-col :span="12" class="bg wow fadeIn"></el-col>
-      <!-- 右側內容 (通過變量配合v-if來切換)-->
-      <el-col :span="6" :offset="3" class="form">
-        <!-- 註冊頁面 -->
-        <el-form
-          ref="form"
-          class="wow lightSpeedInLeft"
-          size="large"
-          autocomplete="off"
-          v-if="isRegister"
-          :model="formModel"
-          :rules="rules"
-          status-icon
-          @keyup.enter="register"
-        >
-          <el-form-item>
-            <h1>文章管理系統 歡迎註冊</h1>
-          </el-form-item>
-          <el-form-item prop="username">
-            <el-input
-              :prefix-icon="User"
-              placeholder="請輸入用戶名"
-              v-model="formModel.username"
-            ></el-input>
-          </el-form-item>
-          <el-form-item prop="password">
-            <el-input
-              :prefix-icon="Lock"
-              type="password"
-              placeholder="請輸入密碼"
-              v-model="formModel.password"
-              show-password
-            ></el-input>
-          </el-form-item>
-          <el-form-item prop="repassword">
-            <el-input
-              :prefix-icon="Lock"
-              type="password"
-              placeholder="請再次輸入密碼"
-              v-model="formModel.repassword"
-              show-password
-            ></el-input>
-          </el-form-item>
-          <el-form-item>
-            <el-button
-              class="button"
-              type="primary"
-              auto-insert-space
-              @click="register"
-            >
-              註冊
-            </el-button>
-          </el-form-item>
-          <el-form-item class="flex">
-            <el-link type="primary" :underline="false" @click="goLogin">
-              ← 已經有帳號了 ? 點我回登入頁面
-            </el-link>
-          </el-form-item>
-        </el-form>
-
-        <!-- 登入頁面 -->
-        <el-form
-          ref="form"
-          size="large"
-          class="wow lightSpeedInRight"
-          autocomplete="off"
-          v-else
-          :model="formModel"
-          :rules="rules"
-          @keyup.enter="login"
-        >
-          <el-form-item>
-            <h1>文章管理系統 歡迎登入</h1>
-          </el-form-item>
-          <!-- 用戶名輸入區 -->
-          <el-form-item prop="username">
-            <el-input
-              :prefix-icon="User"
-              placeholder="請輸入用戶名"
-              v-model="formModel.username"
-            ></el-input>
-          </el-form-item>
-          <!-- 密碼輸入區 -->
-          <el-form-item prop="password">
-            <el-input
-              name="password"
-              :prefix-icon="Lock"
-              type="password"
-              placeholder="請輸入密碼"
-              v-model="formModel.password"
-              show-password
-            ></el-input>
-          </el-form-item>
-          <!-- 記住我和忘記密碼部分 -->
-          <el-form-item class="flex">
-            <div class="flex">
-              <el-checkbox v-model="userStore.isRemember">記住我</el-checkbox>
-              <el-tooltip
-                class="box-item"
-                effect="dark"
-                content="沒有api😢"
-                placement="top-start"
+      <el-col :xs="0" :sm="12" class="bg wow fadeIn"></el-col>
+      <!-- 右側內容 -->
+      <el-col :xs="24" :sm="12" class="form-container">
+        <div class="form-wrapper">
+          <!-- 註冊表單 -->
+          <el-form
+            ref="form"
+            class="wow lightSpeedInLeft"
+            size="large"
+            autocomplete="off"
+            v-if="isRegister"
+            :model="formModel"
+            :rules="rules"
+            status-icon
+            @keyup.enter="register"
+          >
+            <el-form-item>
+              <h1>文章管理系統 歡迎註冊</h1>
+            </el-form-item>
+            <el-form-item prop="username">
+              <el-input
+                :prefix-icon="User"
+                placeholder="請輸入用戶名"
+                v-model="formModel.username"
+              ></el-input>
+            </el-form-item>
+            <el-form-item prop="password">
+              <el-input
+                :prefix-icon="Lock"
+                type="password"
+                placeholder="請輸入密碼"
+                v-model="formModel.password"
+                show-password
+              ></el-input>
+            </el-form-item>
+            <el-form-item prop="repassword">
+              <el-input
+                :prefix-icon="Lock"
+                type="password"
+                placeholder="請再次輸入密碼"
+                v-model="formModel.repassword"
+                show-password
+              ></el-input>
+            </el-form-item>
+            <el-form-item>
+              <el-button
+                class="button"
+                type="primary"
+                auto-insert-space
+                @click="register"
+                :loading="isLoading"
               >
-                <el-link type="primary" :underline="false">忘記密碼？</el-link>
-              </el-tooltip>
-            </div>
-          </el-form-item>
-          <!-- 底部登入按鈕 -->
-          <el-form-item>
-            <el-button
-              class="button"
-              type="primary"
-              auto-insert-space
-              @click="login"
-              >登入</el-button
-            >
-          </el-form-item>
-          <!-- 底部註冊按鈕 -->
-          <el-form-item class="flex">
-            <el-link
-              type="primary"
-              :underline="false"
-              @click="isRegister = true"
-            >
-              沒有帳號嗎 ? 點我去註冊 →
-            </el-link>
-          </el-form-item>
-        </el-form>
+                註冊
+              </el-button>
+            </el-form-item>
+            <el-form-item class="flex">
+              <el-link type="primary" :underline="false" @click="goLogin">
+                ← 已經有帳號了 ? 點我回登入頁面
+              </el-link>
+            </el-form-item>
+          </el-form>
+
+          <!-- 登入表單 -->
+          <el-form
+            ref="form"
+            size="large"
+            class="wow lightSpeedInRight"
+            autocomplete="off"
+            v-else
+            :model="formModel"
+            :rules="rules"
+            @keyup.enter="login"
+          >
+            <el-form-item>
+              <h1>文章管理系統 歡迎登入</h1>
+            </el-form-item>
+            <!-- 用戶名輸入區 -->
+            <el-form-item prop="username">
+              <el-input
+                :prefix-icon="User"
+                placeholder="請輸入用戶名"
+                v-model="formModel.username"
+              ></el-input>
+            </el-form-item>
+            <!-- 密碼輸入區 -->
+            <el-form-item prop="password">
+              <el-input
+                name="password"
+                :prefix-icon="Lock"
+                type="password"
+                placeholder="請輸入密碼"
+                v-model="formModel.password"
+                show-password
+              ></el-input>
+            </el-form-item>
+            <!-- 記住我和忘記密碼部分 -->
+            <el-form-item class="flex">
+              <div class="flex">
+                <el-checkbox v-model="userStore.isRemember">記住我</el-checkbox>
+                <el-tooltip
+                  class="box-item"
+                  effect="dark"
+                  content="沒有api😢"
+                  placement="top-start"
+                >
+                  <el-link type="primary" :underline="false"
+                    >忘記密碼？</el-link
+                  >
+                </el-tooltip>
+              </div>
+            </el-form-item>
+            <!-- 底部登入按鈕 -->
+            <el-form-item>
+              <el-button
+                class="button"
+                type="primary"
+                auto-insert-space
+                @click="login"
+                :loading="isLoading"
+                >登入</el-button
+              >
+            </el-form-item>
+            <!-- 底部註冊按鈕 -->
+            <el-form-item class="flex">
+              <el-link
+                type="primary"
+                :underline="false"
+                @click="isRegister = true"
+              >
+                沒有帳號嗎 ? 點我去註冊 →
+              </el-link>
+            </el-form-item>
+          </el-form>
+        </div>
       </el-col>
     </el-row>
   </div>
@@ -286,24 +308,48 @@ const goLogin = () => {
 <style lang="scss" scoped>
 .box {
   .login-page {
-    height: 100vh;
+    min-height: 100vh;
     background: linear-gradient(to right, #a7a4a4, #f3f2f2);
+    display: flex;
 
     // 左側背景圖
     .bg {
       background: url('@/assets/LoginBgi.webp') no-repeat center / cover;
       border-radius: 0 20px 20px 0;
+      height: 100vh;
+
+      @media (max-width: 768px) {
+        display: none;
+      }
     }
 
-    // 右側表單部分
-    .form {
+    // 新增的表單容器樣式
+    .form-container {
       display: flex;
-      flex-direction: column;
       justify-content: center;
-      user-select: none;
+      align-items: center;
+      padding: 20px;
+
+      .form-wrapper {
+        width: 100%;
+        max-width: 400px;
+
+        @media (max-width: 768px) {
+          max-width: 90%; // 手機版時稍微縮小寬度
+          margin: 0 auto; // 確保居中
+        }
+      }
+
+      :deep(.el-form) {
+        width: 100%;
+
+        .el-form-item {
+          margin-bottom: 20px;
+        }
+      }
 
       .title {
-        margin: 0 auto;
+        text-align: center;
       }
 
       .button {
