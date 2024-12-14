@@ -1,10 +1,14 @@
 # 項目名稱 : 文章管理系統
 
-線上地址 : https://stately-chebakia-4f7849.netlify.app/
+線上地址 ( 如果服務器錯誤代表接口崩潰了 = = ) : https://stately-chebakia-4f7849.netlify.app/
 
 因為使用的是中國的後端接口 所以連線速度可能會有一點點慢 ( 白天還好 晚上可能會有數據出不來的情況）
 
 由於此項目有註冊帳號的 api 所以可以先自行註冊帳號再進行登入
+
+或者可以用已有帳號 
+
+帳號 : John4105 密碼 : 987654321
 
 ### 路由設計
 ![image](https://github.com/user-attachments/assets/88fd9511-fc7f-4428-b629-8523cfc53879)
