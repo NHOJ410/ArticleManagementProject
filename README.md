@@ -38,6 +38,10 @@
 
 ## 使用技術棧 🔧
 
+![Vue3 Badge](https://img.shields.io/badge/Vue3-35495E?style=flat&logo=vue.js&logoColor=4FC08D)
+![Pinia Badge](https://img.shields.io/badge/Pinia-FF385C?style=flat&logo=vue.js&logoColor=white)
+![Element Plus Badge](https://img.shields.io/badge/Element%20Plus-409EFF?style=flat&logo=vue.js&logoColor=white)
+
 - **框架**：Vue3 + Pinia
 - **組件庫**：Element Plus
 - **預校驗工具**：
@@ -47,6 +51,9 @@
 ---
 
 ## 其他使用的工具與庫
+
+![nprogress Badge](https://img.shields.io/badge/nProgress.js-4D90FE?style=flat&logo=npm&logoColor=white)
+![VueQuill Badge](https://img.shields.io/badge/VueQuill-FD7B2E?style=flat&logo=quill&logoColor=white)
 
 - **nprogress.js**：頁面進度條顯示，優化用戶體驗。
 - **wow.js**：動態動畫效果，讓頁面更具吸引力。
@@ -60,4 +67,5 @@ Vue3 和 Pinia 真的讓開發變得更加輕鬆和高效！
 **Vue3 文章管理系統**，雖然仍有許多需要改進的地方，但每完成一個功能都讓我更加了解 Vue3 的強大與靈活性。
 
 總結一句話：**學習的過程雖然辛苦，但收穫滿滿！🎉**
+
 
